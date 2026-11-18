@@ -4,61 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>QRIS Dinamis Generator - ARIF DHARMA , DIGITAL & KREATIF</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        };
-    </script>
-    <!-- QRCode.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Google Fonts: Inter -->
+    <!-- Optional Google Font with System Fallback -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        * {
+        /* =========================================================================
+           1. CSS VARIABLES & LIGHT / DARK THEME TOKENS
+           ========================================================================= */
+        :root {
+            --bg-primary: #eef2f7;
+            --bg-gradient-1: rgba(59, 130, 246, 0.22);
+            --bg-gradient-2: rgba(99, 102, 241, 0.20);
+            --card-bg: rgba(255, 255, 255, 0.88);
+            --card-border: rgba(255, 255, 255, 0.96);
+            --card-shadow: 0 24px 60px -15px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(203, 213, 225, 0.65);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent-bg: rgba(37, 99, 235, 0.10);
+            --accent-border: rgba(37, 99, 235, 0.22);
+            --accent-text: #2563eb;
+            --surface-inset: rgba(248, 250, 252, 0.92);
+            --surface-inset-border: rgba(203, 213, 225, 0.85);
+            --track-bg: rgba(226, 232, 240, 0.85);
+            --track-border: rgba(203, 213, 225, 0.9);
+            --pill-bg: #ffffff;
+            --pill-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+            --btn-bg: #ffffff;
+            --btn-hover: #f8fafc;
+            --btn-border: rgba(203, 213, 225, 0.85);
+            --btn-shadow: 0 2px 5px rgba(15, 23, 42, 0.04);
+            --btn-sec-bg: rgba(226, 232, 240, 0.78);
+            --btn-sec-hover: rgba(203, 213, 225, 0.85);
+            --btn-op-bg: rgba(37, 99, 235, 0.11);
+            --btn-op-hover: rgba(37, 99, 235, 0.18);
+            --btn-op-text: #2563eb;
+            --btn-eq-bg: #0f172a;
+            --btn-eq-hover: #1e293b;
+            --btn-eq-text: #ffffff;
+            --primary-grad: linear-gradient(135deg, #2563eb, #4f46e5);
+            --primary-grad-hover: linear-gradient(135deg, #1d4ed8, #4338ca);
+            --primary-shadow: 0 10px 24px -6px rgba(37, 99, 235, 0.42);
+            --top-pill-bg: rgba(255, 255, 255, 0.86);
+            --top-pill-border: rgba(203, 213, 225, 0.8);
+            --switch-track: #cbd5e1;
+        }
+
+        html.dark {
+            --bg-primary: #060a14;
+            --bg-gradient-1: rgba(79, 70, 229, 0.26);
+            --bg-gradient-2: rgba(37, 99, 235, 0.22);
+            --card-bg: rgba(15, 23, 42, 0.84);
+            --card-border: rgba(255, 255, 255, 0.09);
+            --card-shadow: 0 28px 70px -15px rgba(0, 0, 0, 0.72), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-bg: rgba(99, 102, 241, 0.16);
+            --accent-border: rgba(129, 140, 248, 0.28);
+            --accent-text: #a5b4fc;
+            --surface-inset: rgba(2, 6, 23, 0.72);
+            --surface-inset-border: rgba(255, 255, 255, 0.08);
+            --track-bg: rgba(2, 6, 23, 0.78);
+            --track-border: rgba(255, 255, 255, 0.08);
+            --pill-bg: #1e293b;
+            --pill-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+            --btn-bg: rgba(255, 255, 255, 0.05);
+            --btn-hover: rgba(255, 255, 255, 0.10);
+            --btn-border: rgba(255, 255, 255, 0.08);
+            --btn-shadow: none;
+            --btn-sec-bg: rgba(255, 255, 255, 0.09);
+            --btn-sec-hover: rgba(255, 255, 255, 0.15);
+            --btn-op-bg: rgba(99, 102, 241, 0.20);
+            --btn-op-hover: rgba(99, 102, 241, 0.30);
+            --btn-op-text: #a5b4fc;
+            --btn-eq-bg: rgba(99, 102, 241, 0.36);
+            --btn-eq-hover: rgba(99, 102, 241, 0.48);
+            --btn-eq-text: #ffffff;
+            --primary-grad: linear-gradient(135deg, #4f46e5, #2563eb);
+            --primary-grad-hover: linear-gradient(135deg, #6366f1, #3b82f6);
+            --primary-shadow: 0 10px 26px -6px rgba(79, 70, 229, 0.48);
+            --top-pill-bg: rgba(15, 23, 42, 0.86);
+            --top-pill-border: rgba(255, 255, 255, 0.10);
+            --switch-track: #1e293b;
+        }
+
+        /* =========================================================================
+           2. RESET, LAYOUT & GLASSMORPHISM SURFACES
+           ========================================================================= */
+        *, *::before, *::after {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100dvh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
             overflow-x: hidden;
+            position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Glassmorphism Card Surface */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 0 24px 60px -15px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(226, 232, 240, 0.65);
+        .ambient-orb {
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(110px);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .dark .glass-card {
-            background: rgba(15, 23, 42, 0.82);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 28px 70px -15px rgba(0, 0, 0, 0.68), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+        .orb-top {
+            top: -10%;
+            left: -10%;
+            background: var(--bg-gradient-1);
         }
 
-        /* Compact iOS Light/Dark Mode Toggle Switch */
+        .orb-bottom {
+            bottom: -10%;
+            right: -10%;
+            background: var(--bg-gradient-2);
+        }
+
+        .app-shell {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            z-index: 10;
+            margin: auto;
+        }
+
+        /* =========================================================================
+           3. TOP BAR & NON-INTRUSIVE IOS THEME TOGGLE (48x26px, 20px KNOB)
+           ========================================================================= */
+        .top-bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.75);
+            flex-shrink: 0;
+        }
+
+        .status-text {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .theme-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: var(--top-pill-bg);
+            border: 1px solid var(--top-pill-border);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+        }
+
+        .theme-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
+
         .ios-switch {
             position: relative;
             display: inline-block;
-            width: 44px;
-            height: 24px;
+            width: 48px;
+            height: 26px;
             flex-shrink: 0;
+            cursor: pointer;
+            touch-action: manipulation;
         }
 
         .ios-switch input {
@@ -70,28 +222,23 @@
 
         .ios-slider {
             position: absolute;
-            cursor: pointer;
             inset: 0;
-            background-color: #cbd5e1;
+            background-color: var(--switch-track);
             border-radius: 9999px;
             transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .dark .ios-slider {
-            background-color: #1e293b;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+            box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.22);
         }
 
         .ios-slider::before {
             content: "";
             position: absolute;
-            height: 18px;
-            width: 18px;
+            height: 20px;
+            width: 20px;
             left: 3px;
             top: 3px;
             background-color: #ffffff;
             border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.24);
+            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.25);
             transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -100,16 +247,81 @@
         }
 
         .ios-switch input:checked + .ios-slider::before {
-            transform: translateX(20px);
+            transform: translateX(22px);
         }
 
-        /* Segmented Tab Switch with Sliding Pill */
+        /* =========================================================================
+           4. MAIN GLASSMORPHISM CARD & MERCHANT HEADER
+           ========================================================================= */
+        .glass-card {
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--card-shadow);
+            border-radius: 32px;
+            padding: 22px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .merchant-header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .app-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 14px;
+            border-radius: 9999px;
+            background: var(--accent-bg);
+            border: 1px solid var(--accent-border);
+            color: var(--accent-text);
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .merchant-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .merchant-nmid {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* =========================================================================
+           5. SEGMENTED TAB SWITCH & VIEW PANELS
+           ========================================================================= */
+        .tab-wrapper {
+            margin-bottom: 16px;
+        }
+
+        .tab-wrapper.hidden {
+            display: none;
+        }
+
         .segmented-track {
             position: relative;
             display: grid;
             grid-template-columns: 1fr 1fr;
             padding: 4px;
             border-radius: 16px;
+            background: var(--track-bg);
+            border: 1px solid var(--track-border);
         }
 
         .segmented-pill {
@@ -119,7 +331,9 @@
             left: 4px;
             width: calc(50% - 4px);
             border-radius: 12px;
-            transition: transform 0.34s cubic-bezier(0.34, 1.25, 0.64, 1), background-color 0.25s ease, box-shadow 0.25s ease;
+            background: var(--pill-bg);
+            box-shadow: var(--pill-shadow);
+            transition: transform 0.32s cubic-bezier(0.34, 1.25, 0.64, 1), background-color 0.25s ease;
             pointer-events: none;
         }
 
@@ -127,9 +341,28 @@
             transform: translateX(100%);
         }
 
-        /* Smooth View Transitions */
+        .tab-btn {
+            position: relative;
+            z-index: 2;
+            padding: 8px 0;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: color 0.2s ease;
+        }
+
+        .tab-btn.active {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
         .view-panel {
-            transition: opacity 0.26s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: opacity 0.24s ease, transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .view-hidden {
@@ -144,56 +377,438 @@
             transform: translateY(0) scale(1);
         }
 
-        /* Strict Single QR Code Rendering (Prevent Double / Overflow) */
-        .qr-frame {
-            width: 232px;
-            height: 232px;
+        /* =========================================================================
+           6. INPUT QRIS PANEL & KEYPAD
+           ========================================================================= */
+        .display-box {
+            padding: 16px;
+            border-radius: 18px;
+            background: var(--surface-inset);
+            border: 1px solid var(--surface-inset-border);
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .display-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-text);
+            margin-bottom: 4px;
+        }
+
+        .nominal-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .error-banner {
+            display: none;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid rgba(244, 63, 94, 0.28);
+            color: #e11d48;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        html.dark .error-banner {
+            color: #fb7185;
+        }
+
+        .error-banner.show {
+            display: block;
+        }
+
+        .numpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .key-btn {
+            min-height: 52px;
+            border-radius: 16px;
+            border: 1px solid var(--btn-border);
+            background: var(--btn-bg);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 20px;
+            font-weight: 600;
+            box-shadow: var(--btn-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+            transition: transform 0.1s ease, background-color 0.15s ease;
+        }
+
+        .key-btn:hover {
+            background: var(--btn-hover);
+        }
+
+        .key-btn:active {
+            transform: scale(0.95);
+        }
+
+        .key-btn.triple-zero {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .key-btn.del-key {
+            background: var(--btn-sec-bg);
+            color: var(--text-secondary);
+        }
+
+        .key-btn.del-key:hover {
+            background: var(--btn-sec-hover);
+        }
+
+        .primary-btn {
+            width: 100%;
+            min-height: 50px;
+            border: none;
+            border-radius: 16px;
+            background: var(--primary-grad);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: var(--primary-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+            transition: transform 0.12s ease, background 0.2s ease;
+        }
+
+        .primary-btn:hover {
+            background: var(--primary-grad-hover);
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* =========================================================================
+           7. INTEGRATED CALCULATOR PANEL
+           ========================================================================= */
+        .calc-screen {
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: var(--surface-inset);
+            border: 1px solid var(--surface-inset-border);
+            margin-bottom: 14px;
+            min-height: 86px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: right;
+        }
+
+        .calc-expr {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            min-height: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .calc-val {
+            font-size: 27px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-top: 4px;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .c-btn {
+            min-height: 44px;
+            border-radius: 14px;
+            border: 1px solid var(--btn-border);
+            background: var(--btn-bg);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: var(--btn-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+            transition: transform 0.1s ease, background-color 0.15s ease;
+        }
+
+        .c-btn:hover {
+            background: var(--btn-hover);
+        }
+
+        .c-btn:active {
+            transform: scale(0.95);
+        }
+
+        .c-btn.ac {
+            background: rgba(244, 63, 94, 0.12);
+            border-color: rgba(244, 63, 94, 0.24);
+            color: #e11d48;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        html.dark .c-btn.ac {
+            color: #fb7185;
+        }
+
+        .c-btn.sec {
+            background: var(--btn-sec-bg);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .c-btn.op {
+            background: var(--btn-op-bg);
+            border-color: var(--accent-border);
+            color: var(--btn-op-text);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .c-btn.eq {
+            background: var(--btn-eq-bg);
+            color: var(--btn-eq-text);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .c-btn.small-txt {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Prevent inner SVGs or spans from intercepting touch/click events */
+        button svg, button span, label svg, label span {
+            pointer-events: none;
+        }
+
+        /* =========================================================================
+           8. QR RESULT VIEW & SINGLE CRISP HIGH-CONTRAST CANVAS FRAME
+           ========================================================================= */
+        .tagihan-badge {
+            padding: 14px;
+            border-radius: 18px;
+            background: var(--accent-bg);
+            border: 1px solid var(--accent-border);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .tagihan-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-text);
+            margin-bottom: 3px;
+        }
+
+        .tagihan-amount {
+            font-size: 27px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .qr-stage {
+            padding: 18px;
+            border-radius: 24px;
+            background: var(--surface-inset);
+            border: 1px solid var(--surface-inset-border);
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .qr-white-box {
+            width: 242px;
+            height: 242px;
             padding: 16px;
             background: #ffffff;
-            border-radius: 24px;
+            border-radius: 22px;
+            border: 1px solid rgba(203, 213, 225, 0.85);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            margin: 0 auto;
         }
 
-        #qrcode {
-            width: 200px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        #qrcode canvas {
-            display: none !important;
-        }
-
-        #qrcode img {
-            width: 200px !important;
-            height: 200px !important;
-            max-width: 200px !important;
-            max-height: 200px !important;
-            object-fit: contain;
-            display: block !important;
+        #qrCanvas {
+            width: 210px;
+            height: 210px;
+            display: block;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
 
-        /* Interactive Elements Guarantee */
-        button, label.ios-switch {
+        .scan-hint {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 14px;
+        }
+
+        .note-box {
+            margin-bottom: 14px;
+        }
+
+        .note-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            border-radius: 14px;
+            border: 1px solid var(--surface-inset-border);
+            background: var(--surface-inset);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .note-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .note-input:focus {
+            border-color: var(--accent-text);
+            box-shadow: 0 0 0 3px var(--accent-bg);
+        }
+
+        .action-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .save-btn {
+            min-height: 48px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 1px solid var(--btn-border);
+            background: var(--btn-bg);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: var(--btn-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
             cursor: pointer;
             touch-action: manipulation;
-            user-select: none;
+            transition: transform 0.12s ease, background-color 0.15s ease;
         }
 
-        button svg, button span, label.ios-switch span {
+        .save-btn:hover {
+            background: var(--btn-hover);
+        }
+
+        .save-btn:active {
+            transform: scale(0.96);
+        }
+
+        .paid-btn {
+            min-height: 48px;
+            padding: 12px 14px;
+            border: none;
+            border-radius: 16px;
+            background: #059669;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 10px 22px -6px rgba(5, 150, 105, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: transform 0.12s ease, background-color 0.15s ease;
+        }
+
+        .paid-btn:hover {
+            background: #10b981;
+        }
+
+        .paid-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* =========================================================================
+           9. SUCCESS CHECKMARK OVERLAY & TOAST NOTIFICATION
+           ========================================================================= */
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 30;
+            background: var(--card-bg);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border-radius: 32px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
             pointer-events: none;
+            transition: opacity 0.28s ease;
         }
 
-        /* Animated Checkmark for Payment Success */
+        .success-overlay.active {
+            display: flex;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         .checkmark-svg {
             width: 72px;
             height: 72px;
@@ -239,218 +854,222 @@
         @keyframes fillCircle {
             100% { box-shadow: inset 0px 0px 0px 40px #10b981; }
         }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translate(-50%, 14px);
+            z-index: 50;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.94);
+            color: #ffffff;
+            padding: 11px 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+            backdrop-filter: blur(12px);
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.26s ease, transform 0.26s ease;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            display: flex;
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-[#060a14] text-slate-800 dark:text-slate-100 transition-colors duration-300 flex items-center justify-center p-4 sm:p-6 relative">
+<body>
 
-    <!-- Subtle Ambient Background Orbs -->
-    <div class="fixed top-[-12%] left-[-10%] w-80 h-80 bg-blue-400/25 dark:bg-indigo-600/25 rounded-full filter blur-[110px] pointer-events-none"></div>
-    <div class="fixed bottom-[-12%] right-[-10%] w-80 h-80 bg-indigo-400/25 dark:bg-blue-600/20 rounded-full filter blur-[110px] pointer-events-none"></div>
+    <!-- Ambient Orbs -->
+    <div class="ambient-orb orb-top"></div>
+    <div class="ambient-orb orb-bottom"></div>
 
-    <!-- Floating Toast Notification -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden items-center gap-2.5 bg-slate-900/95 dark:bg-slate-800/95 text-white px-4 py-3 rounded-2xl shadow-xl border border-white/10 backdrop-blur-md text-xs sm:text-sm font-medium transition-all duration-300 opacity-0 translate-y-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M5 13l4 4L19 7" />
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
         <span id="toastText">QRIS berhasil disimpan!</span>
     </div>
 
     <!-- Main Container -->
-    <div class="w-full max-w-[420px] flex flex-col gap-3 relative z-10 my-auto">
+    <div class="app-shell">
 
-        <!-- Non-Intrusive Top Bar -->
-        <header class="w-full flex items-center justify-between px-1.5">
-            <div class="inline-flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span>
-                <span class="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 dark:text-slate-400">
-                    EMVCO DYNAMIC QRIS
-                </span>
+        <!-- Top Bar (Outside Card) -->
+        <header class="top-bar">
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span class="status-text">EMVCO DYNAMIC QRIS</span>
             </div>
 
-            <!-- Compact iOS Theme Toggle Switch -->
-            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/85 dark:bg-slate-900/85 border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-md">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            <!-- Non-intrusive iOS Light/Dark Mode Toggle Switch -->
+            <div class="theme-pill">
+                <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
                 </svg>
                 <label class="ios-switch" aria-label="Ganti Tema Terang atau Gelap">
                     <input type="checkbox" id="themeToggle">
                     <span class="ios-slider"></span>
                 </label>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
             </div>
         </header>
 
-        <!-- Primary Glass Card -->
-        <main class="glass-card w-full p-5 sm:p-6 rounded-[2rem] relative overflow-hidden transition-all duration-300">
+        <!-- Primary Glassmorphism Card -->
+        <main class="glass-card">
 
             <!-- Merchant Header -->
-            <div class="text-center mb-5">
-                <div class="inline-flex items-center justify-center px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-indigo-500/15 border border-blue-500/20 dark:border-indigo-400/25 text-blue-600 dark:text-indigo-300 text-[10.5px] font-bold tracking-[0.08em] uppercase mb-2.5">
-                    QRIS DINAMIS GENERATOR
-                </div>
-                <h1 class="text-base sm:text-[18px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                    ARIF DHARMA , DIGITAL &amp; KREATIF
-                </h1>
-                <p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">
-                    NMID: ID1025428566216 &bull; A01
-                </p>
+            <div class="merchant-header">
+                <div class="app-tag">QRIS DINAMIS GENERATOR</div>
+                <h1 class="merchant-title">ARIF DHARMA , DIGITAL &amp; KREATIF</h1>
+                <p class="merchant-nmid">PONOROGO &bull; NMID: ID1025428566216 &bull; A01</p>
             </div>
 
-            <!-- Segmented Tab Switch (Hidden on QR Result View) -->
-            <div id="tabSwitchWrapper" class="mb-4">
-                <div id="segmentedTrack" data-active="qris" class="segmented-track bg-slate-200/80 dark:bg-slate-950/75 border border-slate-200/90 dark:border-white/[0.07]">
-                    <div class="segmented-pill bg-white dark:bg-slate-800 shadow-sm border border-slate-200/60 dark:border-white/10"></div>
-                    <button type="button" id="tabQrisBtn" class="relative z-10 py-2 text-xs font-bold text-slate-900 dark:text-white transition-colors">
-                        Input QRIS
-                    </button>
-                    <button type="button" id="tabCalcBtn" class="relative z-10 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 transition-colors">
-                        Kalkulator
-                    </button>
+            <!-- Segmented Tab Switch -->
+            <div id="tabSwitchWrapper" class="tab-wrapper">
+                <div id="segmentedTrack" data-active="qris" class="segmented-track">
+                    <div class="segmented-pill"></div>
+                    <button type="button" id="tabQrisBtn" class="tab-btn active">Input QRIS</button>
+                    <button type="button" id="tabCalcBtn" class="tab-btn">Kalkulator</button>
                 </div>
             </div>
 
-            <!-- VIEW 1: INPUT QRIS (NUMERIC KEYPAD) -->
+            <!-- VIEW 1: INPUT QRIS -->
             <section id="inputView" class="view-panel view-visible">
-                <!-- Clean Nominal Display Box (No small red reset button) -->
-                <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-950/70 border border-slate-200/90 dark:border-white/[0.08] mb-4 text-center shadow-inner">
-                    <span class="block text-[10.5px] font-bold tracking-[0.1em] uppercase text-blue-600 dark:text-indigo-400 mb-1">
-                        NOMINAL PEMBAYARAN
-                    </span>
-                    <div id="nominalDisplay" class="text-3xl sm:text-[34px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight truncate">
-                        Rp 0
-                    </div>
+                <div class="display-box">
+                    <span class="display-label">NOMINAL PEMBAYARAN</span>
+                    <div id="nominalDisplay" class="nominal-value">Rp 0</div>
                 </div>
 
-                <!-- Error Message Banner -->
-                <div id="errorBanner" class="hidden mb-3 px-3.5 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-600 dark:text-rose-400 text-xs font-medium text-center">
+                <div id="errorBanner" class="error-banner">
                     Masukkan nominal lebih dari Rp 0 terlebih dahulu.
                 </div>
 
-                <!-- iOS-Style Numeric Keypad (1-9, 0 bottom-left, 000 bottom-center, backspace bottom-right) -->
-                <div class="grid grid-cols-3 gap-2.5 mb-4">
-                    <button type="button" data-key="1" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">1</button>
-                    <button type="button" data-key="2" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">2</button>
-                    <button type="button" data-key="3" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">3</button>
+                <!-- 3x4 Numeric Keypad ('0' bottom-left, '000' bottom-center, '⌫' bottom-right) -->
+                <div class="numpad-grid">
+                    <button type="button" data-key="1" class="key-btn">1</button>
+                    <button type="button" data-key="2" class="key-btn">2</button>
+                    <button type="button" data-key="3" class="key-btn">3</button>
 
-                    <button type="button" data-key="4" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">4</button>
-                    <button type="button" data-key="5" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">5</button>
-                    <button type="button" data-key="6" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">6</button>
+                    <button type="button" data-key="4" class="key-btn">4</button>
+                    <button type="button" data-key="5" class="key-btn">5</button>
+                    <button type="button" data-key="6" class="key-btn">6</button>
 
-                    <button type="button" data-key="7" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">7</button>
-                    <button type="button" data-key="8" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">8</button>
-                    <button type="button" data-key="9" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">9</button>
+                    <button type="button" data-key="7" class="key-btn">7</button>
+                    <button type="button" data-key="8" class="key-btn">8</button>
+                    <button type="button" data-key="9" class="key-btn">9</button>
 
-                    <button type="button" data-key="0" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">0</button>
-                    <button type="button" data-key="000" class="numpad-btn min-h-[52px] rounded-2xl text-base font-bold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">000</button>
-                    <button type="button" data-key="del" aria-label="Hapus Digit" class="numpad-btn min-h-[52px] rounded-2xl bg-slate-200/75 hover:bg-slate-300/75 dark:bg-white/[0.08] dark:hover:bg-white/[0.14] text-slate-700 dark:text-slate-200 border border-slate-300/60 dark:border-white/[0.07] flex items-center justify-center transition-all active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
+                    <button type="button" data-key="0" class="key-btn">0</button>
+                    <button type="button" data-key="000" class="key-btn triple-zero">000</button>
+                    <button type="button" data-key="del" aria-label="Hapus Digit" class="key-btn del-key">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                            <line x1="18" y1="9" x2="12" y2="15"></line>
+                            <line x1="12" y1="9" x2="18" y2="15"></line>
                         </svg>
                     </button>
                 </div>
 
-                <!-- Primary Action: Buat QRIS -->
-                <button type="button" id="generateBtn"
-                    class="w-full min-h-[50px] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 dark:from-indigo-600 dark:to-blue-600 dark:hover:from-indigo-500 dark:hover:to-blue-500 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-blue-600/25 dark:shadow-indigo-600/30 transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                <button type="button" id="generateBtn" class="primary-btn">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <path d="M14 14h3v3h-3zM20 14v3h-3M14 20h6"></path>
                     </svg>
-                    <span>Buat QRIS</span>
+                    <span>Buat QRIS Dinamis</span>
                 </button>
             </section>
 
-            <!-- VIEW 2: INTEGRATED CALCULATOR -->
+            <!-- VIEW 2: CALCULATOR -->
             <section id="calcView" class="view-panel view-hidden">
-                <!-- Calculator Display -->
-                <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-950/70 border border-slate-200/90 dark:border-white/[0.08] mb-3.5 shadow-inner flex flex-col justify-between min-h-[90px]">
-                    <div id="calcExpression" class="text-right text-xs font-medium text-slate-500 dark:text-slate-400 min-h-[18px] truncate">
-                        0
-                    </div>
-                    <div id="calcResult" class="text-right text-2xl sm:text-[28px] font-extrabold text-slate-900 dark:text-white tracking-tight truncate mt-1">
-                        Rp 0
-                    </div>
+                <div class="calc-screen">
+                    <div id="calcExpression" class="calc-expr">0</div>
+                    <div id="calcResult" class="calc-val">Rp 0</div>
                 </div>
 
-                <!-- Ergonomic iOS Calculator Grid -->
-                <div class="grid grid-cols-4 gap-2 mb-3.5">
-                    <button type="button" data-calc="AC" class="calc-btn min-h-[44px] rounded-2xl font-bold text-xs bg-rose-500/12 hover:bg-rose-500/20 dark:bg-rose-500/15 dark:hover:bg-rose-500/25 text-rose-600 dark:text-rose-400 border border-rose-500/20 transition-all active:scale-95">AC</button>
-                    <button type="button" data-calc="DEL" aria-label="Hapus" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-sm bg-slate-200/75 hover:bg-slate-300/75 dark:bg-white/[0.08] dark:hover:bg-white/[0.14] text-slate-700 dark:text-slate-200 border border-slate-300/60 dark:border-white/[0.07] flex items-center justify-center transition-all active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
+                <div class="calc-grid">
+                    <button type="button" data-calc="AC" class="c-btn ac">AC</button>
+                    <button type="button" data-calc="DEL" aria-label="Hapus" class="c-btn sec">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                            <line x1="18" y1="9" x2="12" y2="15"></line>
+                            <line x1="12" y1="9" x2="18" y2="15"></line>
                         </svg>
                     </button>
-                    <button type="button" data-calc="%" class="calc-btn min-h-[44px] rounded-2xl font-bold text-sm bg-slate-200/75 hover:bg-slate-300/75 dark:bg-white/[0.08] dark:hover:bg-white/[0.14] text-slate-700 dark:text-slate-200 border border-slate-300/60 dark:border-white/[0.07] transition-all active:scale-95">%</button>
-                    <button type="button" data-calc="/" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-blue-600/12 hover:bg-blue-600/20 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 text-blue-600 dark:text-indigo-300 border border-blue-500/20 dark:border-indigo-400/20 transition-all active:scale-95">&divide;</button>
+                    <button type="button" data-calc="%" class="c-btn sec">%</button>
+                    <button type="button" data-calc="/" class="c-btn op">&divide;</button>
 
-                    <button type="button" data-calc="7" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">7</button>
-                    <button type="button" data-calc="8" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">8</button>
-                    <button type="button" data-calc="9" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">9</button>
-                    <button type="button" data-calc="*" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-blue-600/12 hover:bg-blue-600/20 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 text-blue-600 dark:text-indigo-300 border border-blue-500/20 dark:border-indigo-400/20 transition-all active:scale-95">&times;</button>
+                    <button type="button" data-calc="7" class="c-btn">7</button>
+                    <button type="button" data-calc="8" class="c-btn">8</button>
+                    <button type="button" data-calc="9" class="c-btn">9</button>
+                    <button type="button" data-calc="*" class="c-btn op">&times;</button>
 
-                    <button type="button" data-calc="4" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">4</button>
-                    <button type="button" data-calc="5" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">5</button>
-                    <button type="button" data-calc="6" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">6</button>
-                    <button type="button" data-calc="-" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-blue-600/12 hover:bg-blue-600/20 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 text-blue-600 dark:text-indigo-300 border border-blue-500/20 dark:border-indigo-400/20 transition-all active:scale-95">&minus;</button>
+                    <button type="button" data-calc="4" class="c-btn">4</button>
+                    <button type="button" data-calc="5" class="c-btn">5</button>
+                    <button type="button" data-calc="6" class="c-btn">6</button>
+                    <button type="button" data-calc="-" class="c-btn op">&minus;</button>
 
-                    <button type="button" data-calc="1" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">1</button>
-                    <button type="button" data-calc="2" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">2</button>
-                    <button type="button" data-calc="3" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">3</button>
-                    <button type="button" data-calc="+" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-blue-600/12 hover:bg-blue-600/20 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 text-blue-600 dark:text-indigo-300 border border-blue-500/20 dark:border-indigo-400/20 transition-all active:scale-95">+</button>
+                    <button type="button" data-calc="1" class="c-btn">1</button>
+                    <button type="button" data-calc="2" class="c-btn">2</button>
+                    <button type="button" data-calc="3" class="c-btn">3</button>
+                    <button type="button" data-calc="+" class="c-btn op">+</button>
 
-                    <button type="button" data-calc="0" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">0</button>
-                    <button type="button" data-calc="000" class="calc-btn min-h-[44px] rounded-2xl font-bold text-xs bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">000</button>
-                    <button type="button" data-calc="." class="calc-btn min-h-[44px] rounded-2xl font-bold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">.</button>
-                    <button type="button" data-calc="=" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-slate-900 hover:bg-slate-800 dark:bg-indigo-500/35 dark:hover:bg-indigo-500/45 text-white border border-slate-800 dark:border-indigo-400/40 shadow-sm transition-all active:scale-95">=</button>
+                    <button type="button" data-calc="0" class="c-btn">0</button>
+                    <button type="button" data-calc="000" class="c-btn small-txt">000</button>
+                    <button type="button" data-calc="." class="c-btn">.</button>
+                    <button type="button" data-calc="=" class="c-btn eq">=</button>
                 </div>
 
-                <!-- Use Result & Generate QRIS -->
-                <button type="button" id="useCalcBtn"
-                    class="w-full min-h-[48px] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 dark:from-indigo-600 dark:to-blue-600 dark:hover:from-indigo-500 dark:hover:to-blue-500 text-white font-bold py-3 rounded-2xl shadow-lg shadow-blue-600/25 dark:shadow-indigo-600/30 transition-all active:scale-[0.98] text-xs sm:text-sm flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <button type="button" id="useCalcBtn" class="primary-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                     </svg>
-                    <span>Gunakan Hasil &amp; Buat QRIS</span>
+                    <span>Gunakan ke QRIS</span>
                 </button>
             </section>
 
             <!-- VIEW 3: QRIS RESULT VIEW -->
             <section id="resultView" class="view-panel view-hidden">
-                <!-- Total Tagihan Badge -->
-                <div class="p-3.5 rounded-2xl bg-blue-500/10 dark:bg-indigo-500/15 border border-blue-500/20 dark:border-indigo-400/25 text-center mb-4">
-                    <span class="block text-[10.5px] font-bold tracking-[0.1em] uppercase text-blue-600 dark:text-indigo-300 mb-0.5">
-                        TOTAL TAGIHAN QRIS
-                    </span>
-                    <div id="resultAmountDisplay" class="text-2xl sm:text-[28px] font-extrabold text-slate-900 dark:text-white tracking-tight">
-                        Rp 0
-                    </div>
+                <div class="tagihan-badge">
+                    <span class="tagihan-label">TOTAL TAGIHAN QRIS</span>
+                    <div id="resultAmountDisplay" class="tagihan-amount">Rp 0</div>
                 </div>
 
-                <!-- Clean White QR Code Frame -->
-                <div class="p-4 rounded-3xl bg-slate-50/85 dark:bg-slate-950/65 border border-slate-200/80 dark:border-white/[0.08] mb-5 flex flex-col items-center">
-                    <div class="qr-frame shadow-md border border-slate-200/80">
-                        <div id="qrcode"></div>
+                <div class="qr-stage">
+                    <div class="qr-white-box">
+                        <canvas id="qrCanvas" width="456" height="456"></canvas>
                     </div>
-                    <p class="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 dark:text-slate-500 mt-3.5">
-                        SCAN QRIS UNTUK MEMBAYAR
-                    </p>
+                    <p class="scan-hint">SCAN QRIS UNTUK MEMBAYAR</p>
                 </div>
 
-                <!-- Action Buttons: Simpan QR & Sudah Dibayar -->
-                <div class="grid grid-cols-2 gap-3">
-                    <button type="button" id="saveQrBtn"
-                        class="min-h-[48px] px-4 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-white hover:bg-slate-50 dark:bg-white/[0.07] dark:hover:bg-white/[0.12] text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-white/15 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                <div class="note-box">
+                    <input type="text" id="paymentNoteInput" class="note-input" maxlength="48" placeholder="Catatan pembayaran (opsional, misal: Kopi Susu)">
+                </div>
+
+                <div class="action-row">
+                    <button type="button" id="saveQrBtn" class="save-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
                         <span>Simpan QR</span>
                     </button>
 
-                    <button type="button" id="paidBtn"
-                        class="min-h-[48px] px-4 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/25 transition-all active:scale-95 flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M5 13l4 4L19 7" />
+                    <button type="button" id="paidBtn" class="paid-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                         <span>Sudah Dibayar</span>
                     </button>
@@ -458,30 +1077,653 @@
             </section>
 
             <!-- Payment Success Overlay -->
-            <div id="successOverlay" class="absolute inset-0 z-30 glass-card rounded-[2rem] hidden pointer-events-none flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+            <div id="successOverlay" class="success-overlay">
                 <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
                     <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
                     <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                 </svg>
-                <p class="text-slate-900 dark:text-white mt-5 text-lg font-extrabold tracking-tight">Pembayaran Diterima</p>
-                <p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">Mengatur ulang transaksi...</p>
+                <p style="margin-top: 18px; font-size: 18px; font-weight: 800; color: var(--text-primary);">Pembayaran Diterima</p>
+                <p style="margin-top: 4px; font-size: 12px; font-weight: 500; color: var(--text-muted);">Mengatur ulang transaksi...</p>
             </div>
 
         </main>
     </div>
 
 <script>
-    // =========================================================================
-    // 1. STATIC QRIS MERCHANT STRING (EXACT BYTE-FOR-BYTE)
-    // =========================================================================
+(function () {
+    'use strict';
+
+    /* =========================================================================
+       1. BIT-EXACT ISO/IEC 18004 QR CODE GENERATOR ENGINE (PURE JAVASCRIPT)
+          - Byte Mode, Versions 1..15, Error Correction Level L & M
+          - Reed-Solomon GF(256) with polynomial 0x11D
+          - Exact ISO/IEC 18004 Format Information & Version Information bit order
+          - Full N1 + N2 + N3 + N4 mask penalty evaluation across all 8 masks
+          - 4-module quiet zone + crisp integer pixel scaling (#000000 on #FFFFFF)
+       ========================================================================= */
+    const PureQR = (function () {
+        const EXP = new Uint8Array(512);
+        const LOG = new Uint8Array(256);
+        let x = 1;
+        for (let i = 0; i < 255; i++) {
+            EXP[i] = x;
+            LOG[x] = i;
+            x <<= 1;
+            if (x & 0x100) x ^= 0x11d;
+        }
+        for (let i = 255; i < 512; i++) {
+            EXP[i] = EXP[i - 255];
+        }
+
+        function gfMul(a, b) {
+            if (a === 0 || b === 0) return 0;
+            return EXP[LOG[a] + LOG[b]];
+        }
+
+        function getGeneratorPoly(ecLen) {
+            let poly = [1];
+            for (let i = 0; i < ecLen; i++) {
+                const next = new Array(poly.length + 1).fill(0);
+                const factor = EXP[i];
+                for (let j = 0; j < poly.length; j++) {
+                    next[j] ^= poly[j];
+                    next[j + 1] ^= gfMul(poly[j], factor);
+                }
+                poly = next;
+            }
+            return poly;
+        }
+
+        function computeRS(data, ecLen) {
+            const gen = getGeneratorPoly(ecLen);
+            const res = new Uint8Array(data.length + ecLen);
+            res.set(data);
+            for (let i = 0; i < data.length; i++) {
+                const coef = res[i];
+                if (coef !== 0) {
+                    for (let j = 0; j < gen.length; j++) {
+                        res[i + j] ^= gfMul(gen[j], coef);
+                    }
+                }
+            }
+            return res.slice(data.length);
+        }
+
+        // [totalDataBytes, ecBytesPerBlock, g1Blocks, g1DataBytes, g2Blocks, g2DataBytes]
+        const EC_SPECS = {
+            L: [
+                null,
+                [19,  7,  1, 19,  0, 0],
+                [34,  10, 1, 34,  0, 0],
+                [55,  15, 1, 55,  0, 0],
+                [80,  20, 1, 80,  0, 0],
+                [108, 26, 1, 108, 0, 0],
+                [136, 18, 2, 68,  0, 0],
+                [156, 20, 2, 78,  0, 0],
+                [194, 24, 2, 97,  0, 0],
+                [232, 30, 2, 116, 0, 0],
+                [274, 18, 2, 68,  2, 69],
+                [324, 20, 4, 81,  0, 0],
+                [370, 24, 2, 92,  2, 93],
+                [428, 26, 4, 107, 0, 0],
+                [461, 30, 3, 115, 1, 116],
+                [523, 22, 5, 87,  1, 88]
+            ],
+            M: [
+                null,
+                [16,  10, 1, 16, 0, 0],
+                [28,  16, 1, 28, 0, 0],
+                [44,  26, 1, 44, 0, 0],
+                [64,  18, 2, 32, 0, 0],
+                [86,  24, 2, 43, 0, 0],
+                [108, 16, 4, 27, 0, 0],
+                [124, 18, 4, 31, 0, 0],
+                [154, 22, 2, 38, 2, 39],
+                [182, 22, 3, 36, 2, 37],
+                [216, 26, 4, 43, 1, 44],
+                [254, 30, 1, 50, 4, 51],
+                [290, 22, 6, 36, 2, 37],
+                [334, 22, 8, 37, 1, 38],
+                [365, 24, 4, 40, 5, 41],
+                [415, 24, 5, 41, 5, 42]
+            ]
+        };
+
+        const ALIGNMENT_CENTERS = [
+            [],
+            [],
+            [6, 18],
+            [6, 22],
+            [6, 26],
+            [6, 30],
+            [6, 34],
+            [6, 22, 38],
+            [6, 24, 42],
+            [6, 26, 46],
+            [6, 28, 50],
+            [6, 30, 54],
+            [6, 32, 58],
+            [6, 34, 62],
+            [6, 26, 46, 66],
+            [6, 26, 48, 70]
+        ];
+
+        const REM_BITS = [0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 3, 3];
+
+        // Compute 15-bit BCH(15,5) Format Information with mask 0x5412
+        // Level indicators: L = 01 (1), M = 00 (0)
+        function getFormatBits(ecLevel, maskIdx) {
+            const ecBits = ecLevel === 'L' ? 1 : 0;
+            const data = (ecBits << 3) | maskIdx;
+            let rem = data << 10;
+            for (let i = 14; i >= 10; i--) {
+                if ((rem >>> i) & 1) {
+                    rem ^= (0x537 << (i - 10));
+                }
+            }
+            return ((data << 10) | rem) ^ 0x5412;
+        }
+
+        // Compute 18-bit BCH(18,6) Version Information for Version >= 7 (generator 0x1F25)
+        function getVersionBits(version) {
+            let rem = version << 12;
+            for (let i = 17; i >= 12; i--) {
+                if ((rem >>> i) & 1) {
+                    rem ^= (0x1F25 << (i - 12));
+                }
+            }
+            return (version << 12) | rem;
+        }
+
+        function encodeBytes(text) {
+            const bytes = [];
+            for (let i = 0; i < text.length; i++) {
+                const code = text.charCodeAt(i);
+                if (code < 0x80) {
+                    bytes.push(code);
+                } else if (code < 0x800) {
+                    bytes.push(0xC0 | (code >> 6), 0x80 | (code & 0x3F));
+                } else {
+                    bytes.push(0xE0 | (code >> 12), 0x80 | ((code >> 6) & 0x3F), 0x80 | (code & 0x3F));
+                }
+            }
+            return bytes;
+        }
+
+        function chooseVersion(byteLen, ecLevel) {
+            const table = EC_SPECS[ecLevel];
+            for (let v = 1; v <= 15; v++) {
+                const capBytes = table[v][0];
+                const headerBits = v <= 9 ? 12 : 20;
+                const maxDataBytes = Math.floor((capBytes * 8 - headerBits) / 8);
+                if (byteLen <= maxDataBytes) return v;
+            }
+            throw new Error('Payload melebihi kapasitas QR v15.');
+        }
+
+        function buildCodewords(version, inputBytes, ecLevel) {
+            const [totalDataBytes, ecPerBlock, g1Blocks, g1Data, g2Blocks, g2Data] = EC_SPECS[ecLevel][version];
+            const bits = [];
+            const pushBits = (val, len) => {
+                for (let i = len - 1; i >= 0; i--) {
+                    bits.push((val >>> i) & 1);
+                }
+            };
+
+            pushBits(0b0100, 4); // Byte Mode
+            pushBits(inputBytes.length, version <= 9 ? 8 : 16);
+            for (let i = 0; i < inputBytes.length; i++) {
+                pushBits(inputBytes[i], 8);
+            }
+
+            const totalDataBits = totalDataBytes * 8;
+            const termLen = Math.min(4, totalDataBits - bits.length);
+            pushBits(0, termLen);
+            while (bits.length % 8 !== 0) bits.push(0);
+
+            const dataBytes = [];
+            for (let i = 0; i < bits.length; i += 8) {
+                let b = 0;
+                for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j];
+                dataBytes.push(b);
+            }
+
+            const padBytes = [0xEC, 0x11];
+            let padIdx = 0;
+            while (dataBytes.length < totalDataBytes) {
+                dataBytes.push(padBytes[padIdx % 2]);
+                padIdx++;
+            }
+
+            const dataBlocks = [];
+            const ecBlocks = [];
+            let offset = 0;
+
+            for (let b = 0; b < g1Blocks; b++) {
+                const slice = dataBytes.slice(offset, offset + g1Data);
+                offset += g1Data;
+                dataBlocks.push(slice);
+                ecBlocks.push(computeRS(slice, ecPerBlock));
+            }
+            for (let b = 0; b < g2Blocks; b++) {
+                const slice = dataBytes.slice(offset, offset + g2Data);
+                offset += g2Data;
+                dataBlocks.push(slice);
+                ecBlocks.push(computeRS(slice, ecPerBlock));
+            }
+
+            const finalCodewords = [];
+            const maxDataLen = Math.max(g1Data, g2Data);
+            for (let i = 0; i < maxDataLen; i++) {
+                for (let b = 0; b < dataBlocks.length; b++) {
+                    if (i < dataBlocks[b].length) finalCodewords.push(dataBlocks[b][i]);
+                }
+            }
+            for (let i = 0; i < ecPerBlock; i++) {
+                for (let b = 0; b < ecBlocks.length; b++) {
+                    finalCodewords.push(ecBlocks[b][i]);
+                }
+            }
+
+            const bitStream = [];
+            for (let i = 0; i < finalCodewords.length; i++) {
+                const cw = finalCodewords[i];
+                for (let bit = 7; bit >= 0; bit--) {
+                    bitStream.push((cw >>> bit) & 1);
+                }
+            }
+            for (let r = 0; r < REM_BITS[version]; r++) {
+                bitStream.push(0);
+            }
+            return bitStream;
+        }
+
+        function createBaseMatrix(version) {
+            const size = version * 4 + 17;
+            const modules = Array.from({ length: size }, () => new Uint8Array(size));
+            const isFunc = Array.from({ length: size }, () => new Uint8Array(size));
+
+            function setFunc(r, c, val) {
+                if (r >= 0 && r < size && c >= 0 && c < size) {
+                    modules[r][c] = val ? 1 : 0;
+                    isFunc[r][c] = 1;
+                }
+            }
+
+            function drawFinder(row, col) {
+                for (let dr = -1; dr <= 7; dr++) {
+                    for (let dc = -1; dc <= 7; dc++) {
+                        const r = row + dr;
+                        const c = col + dc;
+                        if (r < 0 || r >= size || c < 0 || c >= size) continue;
+                        const inOuter = dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6;
+                        const inInner = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4;
+                        const onBorder = dr === 0 || dr === 6 || dc === 0 || dc === 6;
+                        setFunc(r, c, (inOuter && (onBorder || inInner)) ? 1 : 0);
+                    }
+                }
+            }
+
+            drawFinder(0, 0);
+            drawFinder(0, size - 7);
+            drawFinder(size - 7, 0);
+
+            // Alignment patterns
+            const centers = ALIGNMENT_CENTERS[version];
+            for (let i = 0; i < centers.length; i++) {
+                for (let j = 0; j < centers.length; j++) {
+                    const cr = centers[i];
+                    const cc = centers[j];
+                    if ((cr === 6 && cc === 6) ||
+                        (cr === 6 && cc === size - 7) ||
+                        (cr === size - 7 && cc === 6)) {
+                        continue;
+                    }
+                    for (let dr = -2; dr <= 2; dr++) {
+                        for (let dc = -2; dc <= 2; dc++) {
+                            const dark = Math.max(Math.abs(dr), Math.abs(dc)) !== 1;
+                            setFunc(cr + dr, cc + dc, dark ? 1 : 0);
+                        }
+                    }
+                }
+            }
+
+            // Timing patterns
+            for (let i = 8; i < size - 8; i++) {
+                setFunc(6, i, i % 2 === 0 ? 1 : 0);
+                setFunc(i, 6, i % 2 === 0 ? 1 : 0);
+            }
+
+            // Reserve Format Information modules
+            for (let i = 0; i < 9; i++) {
+                if (i !== 6) {
+                    setFunc(8, i, 0);
+                    setFunc(i, 8, 0);
+                }
+            }
+            for (let i = 0; i < 8; i++) {
+                setFunc(8, size - 1 - i, 0);
+                setFunc(size - 1 - i, 8, 0);
+            }
+            // Dark module at (4*V + 9, 8) === (size - 8, 8)
+            setFunc(size - 8, 8, 1);
+
+            // Exact ISO/IEC 18004 Version Information for Version >= 7
+            if (version >= 7) {
+                const vBits = getVersionBits(version);
+                for (let k = 0; k < 18; k++) {
+                    const bit = (vBits >>> k) & 1;
+                    const a = Math.floor(k / 3);
+                    const b = size - 11 + (k % 3);
+                    setFunc(b, a, bit); // Bottom-left 3x6
+                    setFunc(a, b, bit); // Top-right 6x3
+                }
+            }
+
+            return { size, modules, isFunc };
+        }
+
+        function placeDataBits(size, modules, isFunc, bitStream) {
+            let bitIdx = 0;
+            let upward = true;
+            for (let right = size - 1; right >= 1; right -= 2) {
+                if (right === 6) right = 5;
+                for (let vert = 0; vert < size; vert++) {
+                    const r = upward ? (size - 1 - vert) : vert;
+                    for (let j = 0; j < 2; j++) {
+                        const c = right - j;
+                        if (!isFunc[r][c]) {
+                            modules[r][c] = bitIdx < bitStream.length ? bitStream[bitIdx] : 0;
+                            bitIdx++;
+                        }
+                    }
+                }
+                upward = !upward;
+            }
+        }
+
+        function applyMaskAndFormat(size, baseModules, isFunc, ecLevel, maskIdx) {
+            const m = Array.from({ length: size }, (_, r) => new Uint8Array(baseModules[r]));
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    if (isFunc[r][c]) continue;
+                    let invert = false;
+                    switch (maskIdx) {
+                        case 0: invert = (r + c) % 2 === 0; break;
+                        case 1: invert = r % 2 === 0; break;
+                        case 2: invert = c % 3 === 0; break;
+                        case 3: invert = (r + c) % 3 === 0; break;
+                        case 4: invert = (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0; break;
+                        case 5: invert = ((r * c) % 2 + (r * c) % 3) === 0; break;
+                        case 6: invert = (((r * c) % 2 + (r * c) % 3) % 2) === 0; break;
+                        case 7: invert = (((r + c) % 2 + (r * c) % 3) % 2) === 0; break;
+                    }
+                    if (invert) m[r][c] ^= 1;
+                }
+            }
+
+            // Bit-exact ISO/IEC 18004 15-bit Format Information placement (MSB=14 to LSB=0)
+            const fmt = getFormatBits(ecLevel, maskIdx);
+            const bit = (pos) => (fmt >>> pos) & 1;
+
+            // Primary copy around top-left finder
+            m[8][0] = bit(14);
+            m[8][1] = bit(13);
+            m[8][2] = bit(12);
+            m[8][3] = bit(11);
+            m[8][4] = bit(10);
+            m[8][5] = bit(9);
+            m[8][7] = bit(8);
+            m[8][8] = bit(7);
+            m[7][8] = bit(6);
+            m[5][8] = bit(5);
+            m[4][8] = bit(4);
+            m[3][8] = bit(3);
+            m[2][8] = bit(2);
+            m[1][8] = bit(1);
+            m[0][8] = bit(0);
+
+            // Secondary copy split around bottom-left and top-right finders
+            m[size - 1][8] = bit(14);
+            m[size - 2][8] = bit(13);
+            m[size - 3][8] = bit(12);
+            m[size - 4][8] = bit(11);
+            m[size - 5][8] = bit(10);
+            m[size - 6][8] = bit(9);
+            m[size - 7][8] = bit(8);
+            m[8][size - 8] = bit(7);
+            m[8][size - 7] = bit(6);
+            m[8][size - 6] = bit(5);
+            m[8][size - 5] = bit(4);
+            m[8][size - 4] = bit(3);
+            m[8][size - 3] = bit(2);
+            m[8][size - 2] = bit(1);
+            m[8][size - 1] = bit(0);
+
+            m[size - 8][8] = 1;
+            return m;
+        }
+
+        function scorePenalty(size, m) {
+            let penalty = 0;
+
+            // N1: Adjacent modules in row/column in same color
+            for (let r = 0; r < size; r++) {
+                let runColor = m[r][0], runLen = 1;
+                for (let c = 1; c < size; c++) {
+                    if (m[r][c] === runColor) {
+                        runLen++;
+                        if (runLen === 5) penalty += 3;
+                        else if (runLen > 5) penalty += 1;
+                    } else {
+                        runColor = m[r][c];
+                        runLen = 1;
+                    }
+                }
+            }
+            for (let c = 0; c < size; c++) {
+                let runColor = m[0][c], runLen = 1;
+                for (let r = 1; r < size; r++) {
+                    if (m[r][c] === runColor) {
+                        runLen++;
+                        if (runLen === 5) penalty += 3;
+                        else if (runLen > 5) penalty += 1;
+                    } else {
+                        runColor = m[r][c];
+                        runLen = 1;
+                    }
+                }
+            }
+
+            // N2: 2x2 blocks of same color
+            for (let r = 0; r < size - 1; r++) {
+                for (let c = 0; c < size - 1; c++) {
+                    const v = m[r][c];
+                    if (v === m[r][c + 1] && v === m[r + 1][c] && v === m[r + 1][c + 1]) {
+                        penalty += 3;
+                    }
+                }
+            }
+
+            // N3: Finder-like 1:1:3:1:1 patterns (1011101) with 4 light modules before or after
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c <= size - 11; c++) {
+                    if (m[r][c] === 1 && m[r][c + 1] === 0 && m[r][c + 2] === 1 &&
+                        m[r][c + 3] === 1 && m[r][c + 4] === 1 && m[r][c + 5] === 0 && m[r][c + 6] === 1 &&
+                        m[r][c + 7] === 0 && m[r][c + 8] === 0 && m[r][c + 9] === 0 && m[r][c + 10] === 0) {
+                        penalty += 40;
+                    }
+                    if (m[r][c] === 0 && m[r][c + 1] === 0 && m[r][c + 2] === 0 && m[r][c + 3] === 0 &&
+                        m[r][c + 4] === 1 && m[r][c + 5] === 0 && m[r][c + 6] === 1 &&
+                        m[r][c + 7] === 1 && m[r][c + 8] === 1 && m[r][c + 9] === 0 && m[r][c + 10] === 1) {
+                        penalty += 40;
+                    }
+                }
+            }
+            for (let c = 0; c < size; c++) {
+                for (let r = 0; r <= size - 11; r++) {
+                    if (m[r][c] === 1 && m[r + 1][c] === 0 && m[r + 2][c] === 1 &&
+                        m[r + 3][c] === 1 && m[r + 4][c] === 1 && m[r + 5][c] === 0 && m[r + 6][c] === 1 &&
+                        m[r + 7][c] === 0 && m[r + 8][c] === 0 && m[r + 9][c] === 0 && m[r + 10][c] === 0) {
+                        penalty += 40;
+                    }
+                    if (m[r][c] === 0 && m[r + 1][c] === 0 && m[r + 2][c] === 0 && m[r + 3][c] === 0 &&
+                        m[r + 4][c] === 1 && m[r + 5][c] === 0 && m[r + 6][c] === 1 &&
+                        m[r + 7][c] === 1 && m[r + 8][c] === 1 && m[r + 9][c] === 0 && m[r + 10][c] === 1) {
+                        penalty += 40;
+                    }
+                }
+            }
+
+            // N4: Dark module proportion
+            let darkCount = 0;
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) darkCount += m[r][c];
+            }
+            const percent = (darkCount * 100) / (size * size);
+            const k = Math.floor(Math.abs(percent - 50) / 5);
+            penalty += k * 10;
+
+            return penalty;
+        }
+
+        function generateMatrix(text, ecLevel = 'L') {
+            const inputBytes = encodeBytes(text);
+            const version = chooseVersion(inputBytes.length, ecLevel);
+            const bitStream = buildCodewords(version, inputBytes, ecLevel);
+            const { size, modules, isFunc } = createBaseMatrix(version);
+            placeDataBits(size, modules, isFunc, bitStream);
+
+            let bestScore = Infinity;
+            let bestMatrix = null;
+
+            for (let mask = 0; mask < 8; mask++) {
+                const candidate = applyMaskAndFormat(size, modules, isFunc, ecLevel, mask);
+                const score = scorePenalty(size, candidate);
+                if (score < bestScore) {
+                    bestScore = score;
+                    bestMatrix = candidate;
+                }
+            }
+            return { size, matrix: bestMatrix };
+        }
+
+        function renderToCanvas(canvas, text, targetSize, ecLevel = 'L') {
+            const { size, matrix } = generateMatrix(text, ecLevel);
+            const quietZone = 4;
+            const totalModules = size + quietZone * 2;
+            const cell = Math.max(4, Math.floor(targetSize / totalModules));
+            const exactPx = cell * totalModules;
+
+            canvas.width = exactPx;
+            canvas.height = exactPx;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+
+            // Pure white background including 4-module quiet zone on all 4 sides
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, exactPx, exactPx);
+
+            // Pure black modules (#000000) for maximum camera & app contrast
+            ctx.fillStyle = '#000000';
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    if (matrix[r][c] === 1) {
+                        ctx.fillRect((c + quietZone) * cell, (r + quietZone) * cell, cell, cell);
+                    }
+                }
+            }
+        }
+
+        return { renderToCanvas };
+    })();
+
+    /* =========================================================================
+       2. STATIC QRIS PAYLOAD & EMVCO DYNAMIC CONVERSION + CRC16-CCITT
+       ========================================================================= */
     const STATIC_QRIS = '00020101021126610014COM.GO-JEK.WWW01189360091438351492230210G8351492230303UMI51440014ID.CO.QRIS.WWW0215ID10254285662160303UMI5204899953033605802ID5925ARIF DHARMA , Digital & K6008PONOROGO61056341862070703A016304333A';
 
-    // =========================================================================
-    // 2. DOM REFERENCES & STATE
-    // =========================================================================
-    const htmlRoot = document.documentElement;
+    function computeCRC16CCITT(str) {
+        let crc = 0xFFFF;
+        for (let i = 0; i < str.length; i++) {
+            crc ^= (str.charCodeAt(i) << 8);
+            for (let j = 0; j < 8; j++) {
+                if ((crc & 0x8000) !== 0) {
+                    crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+                } else {
+                    crc = (crc << 1) & 0xFFFF;
+                }
+            }
+        }
+        return crc.toString(16).toUpperCase().padStart(4, '0');
+    }
+
+    // Verify STATIC_QRIS integrity on startup
+    (function verifyStaticQRIS() {
+        const prefix = STATIC_QRIS.slice(0, -4);
+        const expectedCrc = STATIC_QRIS.slice(-4);
+        const computedCrc = computeCRC16CCITT(prefix);
+        if (computedCrc !== expectedCrc || computedCrc !== '333A') {
+            console.error('CRC16 STATIC_QRIS mismatch:', computedCrc, expectedCrc);
+        }
+    })();
+
+    function convertStaticToDynamicQRIS(staticPayload, amountDigits) {
+        const cleanAmount = parseInt(amountDigits, 10).toString();
+        const tags = [];
+        let idx = 0;
+
+        // Parse sequential EMVCo TLV tags, stopping at tag '63' (CRC)
+        while (idx + 4 <= staticPayload.length) {
+            const tag = staticPayload.substring(idx, idx + 2);
+            if (tag === '63') break;
+
+            const len = parseInt(staticPayload.substring(idx + 2, idx + 4), 10);
+            if (isNaN(len) || idx + 4 + len > staticPayload.length) {
+                throw new Error('Struktur TLV QRIS tidak valid.');
+            }
+            const val = staticPayload.substring(idx + 4, idx + 4 + len);
+            tags.push({ tag, val });
+            idx += 4 + len;
+        }
+
+        // Reconstruct preserving original tag order:
+        // - Set tag '01' to '12' (Dynamic QRIS)
+        // - Insert tag '54' right before tag '58' (or update if already present)
+        let payloadWithoutCRC = '';
+        let amountInserted = false;
+
+        for (let i = 0; i < tags.length; i++) {
+            const item = tags[i];
+            if (item.tag === '54') continue;
+
+            if (item.tag === '58' && !amountInserted) {
+                const amtLen = cleanAmount.length.toString().padStart(2, '0');
+                payloadWithoutCRC += `54${amtLen}${cleanAmount}`;
+                amountInserted = true;
+            }
+
+            const finalVal = item.tag === '01' ? '12' : item.val;
+            const finalLen = finalVal.length.toString().padStart(2, '0');
+            payloadWithoutCRC += `${item.tag}${finalLen}${finalVal}`;
+        }
+
+        if (!amountInserted) {
+            const amtLen = cleanAmount.length.toString().padStart(2, '0');
+            payloadWithoutCRC += `54${amtLen}${cleanAmount}`;
+        }
+
+        const payloadWithCrcHeader = payloadWithoutCRC + '6304';
+        const crcHex = computeCRC16CCITT(payloadWithCrcHeader);
+        return payloadWithCrcHeader + crcHex;
+    }
+
+    /* =========================================================================
+       3. DOM ELEMENTS & APP STATE
+       ========================================================================= */
+    const htmlEl = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
-    const toast = document.getElementById('toast');
+    const toastEl = document.getElementById('toast');
     const toastText = document.getElementById('toastText');
 
     const tabSwitchWrapper = document.getElementById('tabSwitchWrapper');
@@ -495,83 +1737,70 @@
 
     const nominalDisplay = document.getElementById('nominalDisplay');
     const errorBanner = document.getElementById('errorBanner');
-    const numpadButtons = document.querySelectorAll('.numpad-btn');
+    const keyButtons = document.querySelectorAll('.key-btn');
     const generateBtn = document.getElementById('generateBtn');
 
     const calcExpressionEl = document.getElementById('calcExpression');
     const calcResultEl = document.getElementById('calcResult');
-    const calcButtons = document.querySelectorAll('.calc-btn');
+    const calcButtons = document.querySelectorAll('.c-btn');
     const useCalcBtn = document.getElementById('useCalcBtn');
 
     const resultAmountDisplay = document.getElementById('resultAmountDisplay');
-    const qrcodeContainer = document.getElementById('qrcode');
+    const qrCanvas = document.getElementById('qrCanvas');
+    const paymentNoteInput = document.getElementById('paymentNoteInput');
     const saveQrBtn = document.getElementById('saveQrBtn');
     const paidBtn = document.getElementById('paidBtn');
     const successOverlay = document.getElementById('successOverlay');
 
     let currentRawValue = '';
     let activeTab = 'qris';
-    let toastTimer = null;
+    let toastTimeout = null;
 
-    // =========================================================================
-    // 3. LIGHT / DARK MODE THEME SWITCHER (DEFAULT: LIGHT MODE)
-    // =========================================================================
-    function applyTheme(isDark) {
-        if (isDark) {
-            htmlRoot.classList.remove('light');
-            htmlRoot.classList.add('dark');
-            themeToggle.checked = true;
-        } else {
-            htmlRoot.classList.remove('dark');
-            htmlRoot.classList.add('light');
-            themeToggle.checked = false;
-        }
-    }
+    /* =========================================================================
+       4. THEME TOGGLE, TOAST & FORMATTING HELPERS
+       ========================================================================= */
+    (function initTheme() {
+        try {
+            const saved = localStorage.getItem('qris_theme');
+            if (saved === 'dark') {
+                htmlEl.classList.remove('light');
+                htmlEl.classList.add('dark');
+                themeToggle.checked = true;
+            }
+        } catch (e) {}
+    })();
 
-    // Default to Light Mode
-    applyTheme(false);
-
-    themeToggle.addEventListener('change', (e) => {
-        applyTheme(e.target.checked);
+    themeToggle.addEventListener('change', () => {
+        const isDark = themeToggle.checked;
+        htmlEl.classList.toggle('dark', isDark);
+        htmlEl.classList.toggle('light', !isDark);
+        try {
+            localStorage.setItem('qris_theme', isDark ? 'dark' : 'light');
+        } catch (e) {}
     });
 
-    // =========================================================================
-    // 4. TOAST NOTIFICATION & FORMATTING HELPERS
-    // =========================================================================
-    function showToast(message) {
-        toastText.textContent = message;
-        toast.classList.remove('hidden');
-        toast.classList.add('flex');
-        void toast.offsetWidth;
-        toast.classList.remove('opacity-0', 'translate-y-3');
-        toast.classList.add('opacity-100', 'translate-y-0');
-
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-            toast.classList.remove('opacity-100', 'translate-y-0');
-            toast.classList.add('opacity-0', 'translate-y-3');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-                toast.classList.remove('flex');
-            }, 300);
+    function showToast(msg) {
+        toastText.textContent = msg;
+        toastEl.classList.add('show');
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toastEl.classList.remove('show');
         }, 2600);
     }
 
-    function formatRupiah(rawDigits) {
-        if (!rawDigits || rawDigits === '0') return 'Rp 0';
-        const clean = rawDigits.replace(/^0+/, '') || '0';
-        return 'Rp ' + clean.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    function formatRupiah(digits) {
+        const clean = (digits || '').toString().replace(/\D/g, '');
+        if (!clean || parseInt(clean, 10) === 0) return 'Rp 0';
+        const formatted = parseInt(clean, 10).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return 'Rp ' + formatted;
     }
 
-    function updateNominalDisplay() {
+    function updateNominalUI() {
         nominalDisplay.textContent = formatRupiah(currentRawValue);
-        errorBanner.classList.add('hidden');
+        errorBanner.classList.remove('show');
     }
 
-    // =========================================================================
-    // 5. SEGMENTED TAB SWITCH & VIEW TRANSITIONS
-    // =========================================================================
-    function showView(targetView) {
+    function showOnlyView(targetView) {
         [inputView, calcView, resultView].forEach((view) => {
             if (view === targetView) {
                 view.classList.remove('view-hidden');
@@ -583,37 +1812,27 @@
         });
     }
 
-    function switchTab(tabName) {
+    function activateTab(tabName) {
         activeTab = tabName;
         segmentedTrack.setAttribute('data-active', tabName);
-
         if (tabName === 'qris') {
-            tabQrisBtn.classList.remove('text-slate-500', 'dark:text-slate-400', 'font-semibold');
-            tabQrisBtn.classList.add('text-slate-900', 'dark:text-white', 'font-bold');
-            tabCalcBtn.classList.remove('text-slate-900', 'dark:text-white', 'font-bold');
-            tabCalcBtn.classList.add('text-slate-500', 'dark:text-slate-400', 'font-semibold');
-            showView(inputView);
+            tabQrisBtn.classList.add('active');
+            tabCalcBtn.classList.remove('active');
+            showOnlyView(inputView);
         } else {
-            tabCalcBtn.classList.remove('text-slate-500', 'dark:text-slate-400', 'font-semibold');
-            tabCalcBtn.classList.add('text-slate-900', 'dark:text-white', 'font-bold');
-            tabQrisBtn.classList.remove('text-slate-900', 'dark:text-white', 'font-bold');
-            tabQrisBtn.classList.add('text-slate-500', 'dark:text-slate-400', 'font-semibold');
-
-            if (currentRawValue && parseInt(currentRawValue, 10) > 0 && calcTokens.length === 0 && calcCurrent === '0') {
-                calcCurrent = parseInt(currentRawValue, 10).toString();
-                renderCalculator();
-            }
-            showView(calcView);
+            tabCalcBtn.classList.add('active');
+            tabQrisBtn.classList.remove('active');
+            showOnlyView(calcView);
         }
     }
 
-    tabQrisBtn.addEventListener('click', () => switchTab('qris'));
-    tabCalcBtn.addEventListener('click', () => switchTab('calc'));
+    tabQrisBtn.addEventListener('click', () => activateTab('qris'));
+    tabCalcBtn.addEventListener('click', () => activateTab('calc'));
 
-    // =========================================================================
-    // 6. NUMERIC KEYPAD LOGIC
-    // =========================================================================
-    numpadButtons.forEach((btn) => {
+    /* =========================================================================
+       7. NUMERIC KEYPAD INTERACTION
+       ========================================================================= */
+    keyButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             const key = btn.getAttribute('data-key');
             if (!key) return;
@@ -632,13 +1851,13 @@
             }
 
             currentRawValue = currentRawValue.replace(/^0+/, '');
-            updateNominalDisplay();
+            updateNominalUI();
         });
     });
 
-    // =========================================================================
-    // 7. INTEGRATED CALCULATOR LOGIC
-    // =========================================================================
+    /* =========================================================================
+       8. INTEGRATED CALCULATOR LOGIC
+       ========================================================================= */
     let calcTokens = [];
     let calcCurrent = '0';
     let calcEvaluated = false;
@@ -653,14 +1872,13 @@
 
     function evaluateTokens(tokens) {
         if (!tokens || tokens.length === 0) return 0;
-        let list = [...tokens];
+        const list = [...tokens];
         if (['+', '-', '*', '/'].includes(list[list.length - 1])) {
             list.pop();
         }
         if (list.length === 0) return 0;
 
-        // Pass 1: Multiplication & Division
-        let pass1 = [parseFloat(list[0]) || 0];
+        const pass1 = [parseFloat(list[0]) || 0];
         for (let i = 1; i < list.length; i += 2) {
             const op = list[i];
             const nextVal = parseFloat(list[i + 1]) || 0;
@@ -674,7 +1892,6 @@
             }
         }
 
-        // Pass 2: Addition & Subtraction
         let total = pass1[0];
         for (let i = 1; i < pass1.length; i += 2) {
             const op = pass1[i];
@@ -690,22 +1907,22 @@
     }
 
     function renderCalculator() {
-        const opMap = { '+': '+', '-': '−', '*': '×', '/': '÷' };
-        const formattedHistory = calcTokens.map(t => opMap[t] || formatNumberID(parseFloat(t)));
-        const currentText = calcCurrent.endsWith('.')
+        const opLabels = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+        const exprParts = calcTokens.map((t) => opLabels[t] || formatNumberID(parseFloat(t)));
+        const currentStr = calcCurrent.endsWith('.')
             ? formatNumberID(parseFloat(calcCurrent)) + ','
             : formatNumberID(parseFloat(calcCurrent));
 
-        calcExpressionEl.textContent = formattedHistory.length === 0
-            ? currentText
-            : `${formattedHistory.join(' ')} ${currentText}`;
+        calcExpressionEl.textContent = exprParts.length === 0
+            ? currentStr
+            : `${exprParts.join(' ')} ${currentStr}`;
 
         const liveVal = getCalcLiveValue();
         if (!isFinite(liveVal) || isNaN(liveVal)) {
             calcResultEl.textContent = 'Tidak valid';
         } else {
-            const intVal = Math.max(0, Math.round(liveVal));
-            calcResultEl.textContent = 'Rp ' + intVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            const intRupiah = Math.max(0, Math.round(liveVal));
+            calcResultEl.textContent = 'Rp ' + intRupiah.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
     }
 
@@ -776,401 +1993,284 @@
     });
 
     useCalcBtn.addEventListener('click', () => {
-        const finalVal = getCalcLiveValue();
-        const roundedRupiah = Math.round(finalVal);
+        const liveVal = getCalcLiveValue();
+        const roundedRupiah = Math.round(liveVal);
         if (!isFinite(roundedRupiah) || isNaN(roundedRupiah) || roundedRupiah <= 0) {
             showToast('Hasil hitungan harus lebih dari Rp 0');
             return;
         }
         currentRawValue = roundedRupiah.toString().slice(0, 10);
-        updateNominalDisplay();
-        generateDynamicQrisFlow();
+        updateNominalUI();
+        generateDynamicQRIS();
     });
 
-    // =========================================================================
-    // 8. EMVCO DYNAMIC QRIS GENERATOR & CRC16-CCITT (BYTE-FOR-BYTE PRESERVATION)
-    // =========================================================================
-    function computeCRC16CCITT(str) {
-        let crc = 0xFFFF;
-        for (let i = 0; i < str.length; i++) {
-            crc ^= (str.charCodeAt(i) << 8);
-            for (let j = 0; j < 8; j++) {
-                if ((crc & 0x8000) !== 0) {
-                    crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
-                } else {
-                    crc = (crc << 1) & 0xFFFF;
-                }
-            }
-        }
-        return crc.toString(16).toUpperCase().padStart(4, '0');
-    }
-
-    function convertStaticToDynamicQRIS(staticPayload, amountDigits) {
-        const cleanAmount = parseInt(amountDigits, 10).toString();
-        const tagsMap = new Map();
-        let idx = 0;
-
-        // 1. Sequential TLV parsing, stopping before tag '63' (CRC)
-        while (idx + 4 <= staticPayload.length) {
-            const tag = staticPayload.substring(idx, idx + 2);
-            if (tag === '63') break;
-
-            const lenStr = staticPayload.substring(idx + 2, idx + 4);
-            const len = parseInt(lenStr, 10);
-            if (isNaN(len) || idx + 4 + len > staticPayload.length) {
-                throw new Error('Format TLV QRIS statis tidak valid.');
-            }
-
-            const val = staticPayload.substring(idx + 4, idx + 4 + len);
-            tagsMap.set(tag, val);
-            idx += 4 + len;
-        }
-
-        // 2. Set Tag '01' (Point of Initiation Method) to '12' (Dynamic QRIS)
-        tagsMap.set('01', '12');
-
-        // 3. Insert/update Tag '54' (Transaction Amount)
-        tagsMap.set('54', cleanAmount);
-
-        // 4. Reassemble all tags in exact ascending numeric tag order, preserving byte-for-byte values
-        const sortedTags = Array.from(tagsMap.keys()).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-        let payloadWithoutCRC = '';
-
-        for (const tag of sortedTags) {
-            const val = tagsMap.get(tag);
-            const lenPadded = val.length.toString().padStart(2, '0');
-            payloadWithoutCRC += `${tag}${lenPadded}${val}`;
-        }
-
-        // 5. Append '6304' and compute exact CRC16-CCITT checksum
-        const payloadWithCrcTag = payloadWithoutCRC + '6304';
-        const crcHex = computeCRC16CCITT(payloadWithCrcTag);
-        return payloadWithCrcTag + crcHex;
-    }
-
-    function generateDynamicQrisFlow() {
+    /* =========================================================================
+       9. GENERATE DYNAMIC QRIS & RENDER DIRECTLY ON VISIBLE CANVAS
+       ========================================================================= */
+    function generateDynamicQRIS() {
         const amountNum = parseInt(currentRawValue, 10);
         if (!currentRawValue || isNaN(amountNum) || amountNum <= 0) {
-            errorBanner.classList.remove('hidden');
+            errorBanner.classList.add('show');
             return;
         }
 
         try {
-            const dynamicQrisString = convertStaticToDynamicQRIS(STATIC_QRIS, amountNum.toString());
-
-            // Clear previous QR and render single crisp 200x200 QR code
-            qrcodeContainer.innerHTML = '';
-            new QRCode(qrcodeContainer, {
-                text: dynamicQrisString,
-                width: 200,
-                height: 200,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.M
-            });
+            const dynamicPayload = convertStaticToDynamicQRIS(STATIC_QRIS, amountNum.toString());
 
             resultAmountDisplay.textContent = formatRupiah(amountNum.toString());
             tabSwitchWrapper.classList.add('hidden');
-            showView(resultView);
+            showOnlyView(resultView);
+
+            // Render crisp integer-scaled QR Code directly onto visible canvas
+            requestAnimationFrame(() => {
+                PureQR.renderToCanvas(qrCanvas, dynamicPayload, 456, 'L');
+            });
         } catch (err) {
-            showToast('Gagal memproses kode QRIS.');
+            showToast('Gagal membuat kode QRIS.');
         }
     }
 
-    generateBtn.addEventListener('click', generateDynamicQrisFlow);
+    generateBtn.addEventListener('click', generateDynamicQRIS);
 
-    // =========================================================================
-    // 9. PAYMENT COMPLETED & AUTO-RESET
-    // =========================================================================
+    /* =========================================================================
+       10. PAYMENT COMPLETED & AUTO RESET
+       ========================================================================= */
     paidBtn.addEventListener('click', () => {
-        successOverlay.classList.remove('hidden', 'pointer-events-none');
-        successOverlay.classList.add('flex');
-        void successOverlay.offsetWidth;
-        successOverlay.classList.remove('opacity-0');
-        successOverlay.classList.add('opacity-100');
-
+        successOverlay.classList.add('active');
         setTimeout(() => {
-            // Reset state back to Rp 0 and Input QRIS tab
+            successOverlay.classList.remove('active');
             currentRawValue = '';
-            updateNominalDisplay();
+            paymentNoteInput.value = '';
+            updateNominalUI();
             calcTokens = [];
             calcCurrent = '0';
             calcEvaluated = false;
             renderCalculator();
-            qrcodeContainer.innerHTML = '';
-
             tabSwitchWrapper.classList.remove('hidden');
-            switchTab('qris');
-
-            successOverlay.classList.remove('opacity-100');
-            successOverlay.classList.add('opacity-0');
-            setTimeout(() => {
-                successOverlay.classList.add('hidden', 'pointer-events-none');
-                successOverlay.classList.remove('flex');
-            }, 300);
-        }, 1600);
+            activateTab('qris');
+        }, 1650);
     });
 
-    // =========================================================================
-    // 10. SAVE QR IMAGE (THEME-MATCHED + GLASSMORPHISM WATERMARK FOOTER)
-    // =========================================================================
+    /* =========================================================================
+       11. SAVE HIGH-RES THEME-MATCHED QR POSTER WITH GLASS WATERMARK
+       ========================================================================= */
+    function drawRoundedRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+    }
+
     saveQrBtn.addEventListener('click', () => {
-        const qrImg = qrcodeContainer.querySelector('img');
-        const qrCanvas = qrcodeContainer.querySelector('canvas');
-        const qrSource = (qrImg && qrImg.complete && qrImg.naturalWidth > 0) ? qrImg : qrCanvas;
-
-        if (!qrSource) {
-            showToast('QR Code belum siap disimpan.');
-            return;
-        }
-
         try {
-            const isDark = htmlRoot.classList.contains('dark');
-            const now = new Date();
-            const pad2 = (n) => n.toString().padStart(2, '0');
-            const dateStr = `${pad2(now.getDate())}/${pad2(now.getMonth() + 1)}/${now.getFullYear()}`;
-            const timeStr = `${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())} WIB`;
-            const timestampLine = `${dateStr} • ${timeStr}`;
-            const fileStamp = `${now.getFullYear()}${pad2(now.getMonth() + 1)}${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;
+            const isDark = htmlEl.classList.contains('dark');
+            const noteText = (paymentNoteInput.value || '').trim();
+            const hasNote = noteText.length > 0;
+            const W = 1080;
+            const H = hasNote ? 1510 : 1440;
+            const poster = document.createElement('canvas');
+            poster.width = W;
+            poster.height = H;
+            const ctx = poster.getContext('2d');
 
-            const W = 760;
-            const H = 1040;
-            const canvas = document.createElement('canvas');
-            canvas.width = W;
-            canvas.height = H;
-            const ctx = canvas.getContext('2d');
-
-            // 1. Background matching active Light or Dark theme
+            // Background Gradient matched to current Light / Dark theme
             const bgGrad = ctx.createLinearGradient(0, 0, W, H);
             if (isDark) {
-                bgGrad.addColorStop(0, '#070b14');
-                bgGrad.addColorStop(1, '#0f172a');
+                bgGrad.addColorStop(0, '#060a14');
+                bgGrad.addColorStop(0.5, '#0f172a');
+                bgGrad.addColorStop(1, '#1e1b4b');
             } else {
-                bgGrad.addColorStop(0, '#f1f5f9');
-                bgGrad.addColorStop(1, '#e2e8f0');
+                bgGrad.addColorStop(0, '#e0e7ff');
+                bgGrad.addColorStop(0.5, '#eef2f7');
+                bgGrad.addColorStop(1, '#dbeafe');
             }
             ctx.fillStyle = bgGrad;
             ctx.fillRect(0, 0, W, H);
 
-            // Ambient soft glow
-            ctx.save();
-            const glow1 = ctx.createRadialGradient(140, 140, 10, 140, 140, 320);
-            glow1.addColorStop(0, isDark ? 'rgba(79, 70, 229, 0.25)' : 'rgba(59, 130, 246, 0.16)');
-            glow1.addColorStop(1, 'transparent');
-            ctx.fillStyle = glow1;
+            // Ambient Glow Orbs
+            const orb1 = ctx.createRadialGradient(180, 200, 20, 180, 200, 420);
+            orb1.addColorStop(0, isDark ? 'rgba(99,102,241,0.32)' : 'rgba(59,130,246,0.22)');
+            orb1.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = orb1;
             ctx.fillRect(0, 0, W, H);
 
-            const glow2 = ctx.createRadialGradient(W - 140, H - 180, 10, W - 140, H - 180, 320);
-            glow2.addColorStop(0, isDark ? 'rgba(37, 99, 235, 0.2)' : 'rgba(99, 102, 241, 0.14)');
-            glow2.addColorStop(1, 'transparent');
-            ctx.fillStyle = glow2;
+            const orb2 = ctx.createRadialGradient(900, 1240, 20, 900, 1240, 420);
+            orb2.addColorStop(0, isDark ? 'rgba(37,99,235,0.28)' : 'rgba(99,102,241,0.18)');
+            orb2.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = orb2;
             ctx.fillRect(0, 0, W, H);
-            ctx.restore();
 
-            // 2. Main Glass Card Container
-            const cardX = 56;
-            const cardY = 48;
-            const cardW = W - 112;
-            const cardH = 824;
+            // Main Glass Card Container
+            const cardX = 90;
+            const cardY = 100;
+            const cardW = W - 180;
+            const cardH = H - 200;
 
             ctx.save();
-            ctx.shadowColor = isDark ? 'rgba(0, 0, 0, 0.55)' : 'rgba(15, 23, 42, 0.1)';
-            ctx.shadowBlur = 32;
-            ctx.shadowOffsetY = 14;
-            ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.88)' : 'rgba(255, 255, 255, 0.94)';
-            ctx.beginPath();
-            ctx.roundRect(cardX, cardY, cardW, cardH, 36);
+            ctx.shadowColor = isDark ? 'rgba(0, 0, 0, 0.55)' : 'rgba(15, 23, 42, 0.14)';
+            ctx.shadowBlur = 50;
+            ctx.shadowOffsetY = 24;
+            drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 64);
+            ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.88)' : 'rgba(255, 255, 255, 0.92)';
             ctx.fill();
-
-            ctx.shadowColor = 'transparent';
-            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.95)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
             ctx.restore();
 
-            // 3. Top Pill Badge inside Card
-            ctx.save();
-            const pillW = 240;
-            const pillH = 34;
+            drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 64);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.98)';
+            ctx.stroke();
+
+            // Top Pill Tag
+            const pillW = 360;
+            const pillH = 54;
             const pillX = (W - pillW) / 2;
-            const pillY = cardY + 38;
-            ctx.fillStyle = isDark ? 'rgba(99, 102, 241, 0.16)' : 'rgba(59, 130, 246, 0.1)';
-            ctx.strokeStyle = isDark ? 'rgba(129, 140, 248, 0.28)' : 'rgba(59, 130, 246, 0.24)';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.roundRect(pillX, pillY, pillW, pillH, 17);
+            const pillY = cardY + 68;
+            drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 27);
+            ctx.fillStyle = isDark ? 'rgba(99, 102, 241, 0.22)' : 'rgba(37, 99, 235, 0.10)';
             ctx.fill();
-            ctx.stroke();
 
+            ctx.textAlign = 'center';
             ctx.fillStyle = isDark ? '#a5b4fc' : '#2563eb';
-            ctx.font = '700 13px Inter, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('QRIS DINAMIS GENERATOR', W / 2, pillY + pillH / 2 + 1);
-            ctx.restore();
+            ctx.font = '800 22px "Plus Jakarta Sans", -apple-system, sans-serif';
+            ctx.fillText('QRIS DINAMIS', W / 2, pillY + 35);
 
-            // 4. Merchant Name & NMID
-            ctx.save();
-            ctx.textAlign = 'center';
+            // Merchant Name & NMID
             ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
-            ctx.font = '800 25px Inter, sans-serif';
-            ctx.fillText('ARIF DHARMA , DIGITAL & KREATIF', W / 2, cardY + 114);
+            ctx.font = '800 38px "Plus Jakarta Sans", -apple-system, sans-serif';
+            ctx.fillText('ARIF DHARMA , DIGITAL & KREATIF', W / 2, pillY + 118);
 
             ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
-            ctx.font = '600 16px Inter, sans-serif';
-            ctx.fillText('NMID: ID1025428566216 • A01', W / 2, cardY + 146);
-            ctx.restore();
+            ctx.font = '600 24px "Plus Jakarta Sans", -apple-system, sans-serif';
+            ctx.fillText('PONOROGO  •  NMID: ID1025428566216', W / 2, pillY + 162);
 
-            // 5. Total Tagihan Box
-            ctx.save();
-            const amtBoxW = cardW - 88;
-            const amtBoxH = 98;
+            // Amount Box
+            const amtBoxW = cardW - 140;
+            const amtBoxH = 148;
             const amtBoxX = (W - amtBoxW) / 2;
-            const amtBoxY = cardY + 178;
-
-            ctx.fillStyle = isDark ? 'rgba(99, 102, 241, 0.14)' : 'rgba(59, 130, 246, 0.08)';
-            ctx.strokeStyle = isDark ? 'rgba(129, 140, 248, 0.25)' : 'rgba(59, 130, 246, 0.22)';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.roundRect(amtBoxX, amtBoxY, amtBoxW, amtBoxH, 22);
+            const amtBoxY = pillY + 206;
+            drawRoundedRect(ctx, amtBoxX, amtBoxY, amtBoxW, amtBoxH, 36);
+            ctx.fillStyle = isDark ? 'rgba(99, 102, 241, 0.16)' : 'rgba(37, 99, 235, 0.08)';
             ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = isDark ? 'rgba(129, 140, 248, 0.30)' : 'rgba(37, 99, 235, 0.22)';
             ctx.stroke();
 
-            ctx.textAlign = 'center';
             ctx.fillStyle = isDark ? '#a5b4fc' : '#2563eb';
-            ctx.font = '700 13px Inter, sans-serif';
-            ctx.fillText('TOTAL TAGIHAN QRIS', W / 2, amtBoxY + 30);
+            ctx.font = '800 21px "Plus Jakarta Sans", -apple-system, sans-serif';
+            ctx.fillText('TOTAL TAGIHAN PEMBAYARAN', W / 2, amtBoxY + 46);
 
             ctx.fillStyle = isDark ? '#ffffff' : '#0f172a';
-            ctx.font = '800 38px Inter, sans-serif';
-            ctx.fillText(formatRupiah(currentRawValue), W / 2, amtBoxY + 74);
-            ctx.restore();
+            ctx.font = '800 60px "Plus Jakarta Sans", -apple-system, sans-serif';
+            ctx.fillText(resultAmountDisplay.textContent, W / 2, amtBoxY + 114);
 
-            // 6. White QR Code Frame with Quiet Zone
-            ctx.save();
-            const qrFrameSize = 420;
+            // Optional Payment Note Badge on Poster
+            let qrFrameY = amtBoxY + 188;
+            if (hasNote) {
+                const noteBoxW = cardW - 140;
+                const noteBoxH = 66;
+                const noteBoxX = (W - noteBoxW) / 2;
+                const noteBoxY = amtBoxY + 170;
+
+                drawRoundedRect(ctx, noteBoxX, noteBoxY, noteBoxW, noteBoxH, 22);
+                ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(241, 245, 249, 0.95)';
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(203, 213, 225, 0.85)';
+                ctx.stroke();
+
+                ctx.fillStyle = isDark ? '#e2e8f0' : '#334155';
+                ctx.font = '700 24px "Plus Jakarta Sans", -apple-system, sans-serif';
+                ctx.fillText(`Catatan: ${noteText}`, W / 2, noteBoxY + 41);
+
+                qrFrameY = noteBoxY + noteBoxH + 34;
+            }
+
+            // Pure White QR Container with Crisp Integer-Scaled QR Code
+            const qrFrameSize = 540;
             const qrFrameX = (W - qrFrameSize) / 2;
-            const qrFrameY = cardY + 306;
-            const pad = 28;
 
-            ctx.shadowColor = isDark ? 'rgba(0, 0, 0, 0.35)' : 'rgba(15, 23, 42, 0.08)';
-            ctx.shadowBlur = 20;
-            ctx.shadowOffsetY = 8;
+            ctx.save();
+            ctx.shadowColor = 'rgba(15, 23, 42, 0.10)';
+            ctx.shadowBlur = 30;
+            ctx.shadowOffsetY = 12;
+            drawRoundedRect(ctx, qrFrameX, qrFrameY, qrFrameSize, qrFrameSize, 44);
             ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.roundRect(qrFrameX, qrFrameY, qrFrameSize, qrFrameSize, 28);
             ctx.fill();
+            ctx.restore();
 
-            ctx.shadowColor = 'transparent';
-            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.12)' : '#e2e8f0';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
+            const qrDrawSize = 468;
+            const qrDrawX = (W - qrDrawSize) / 2;
+            const qrDrawY = qrFrameY + (qrFrameSize - qrDrawSize) / 2;
             ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(qrSource, qrFrameX + pad, qrFrameY + pad, qrFrameSize - pad * 2, qrFrameSize - pad * 2);
-            ctx.restore();
+            ctx.drawImage(qrCanvas, qrDrawX, qrDrawY, qrDrawSize, qrDrawSize);
 
-            // 7. Scan Instruction Text
-            ctx.save();
-            ctx.textAlign = 'center';
-            ctx.fillStyle = isDark ? '#64748b' : '#94a3b8';
-            ctx.font = '700 14px Inter, sans-serif';
-            ctx.fillText('SCAN QRIS UNTUK MEMBAYAR', W / 2, qrFrameY + qrFrameSize + 44);
-            ctx.restore();
+            // Scan Hint
+            ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+            ctx.font = '800 22px "Plus Jakarta Sans", -apple-system, sans-serif';
+            ctx.fillText('SCAN MENGGUNAKAN M-BANKING / E-WALLET', W / 2, qrFrameY + qrFrameSize + 54);
 
-            // 8. Aesthetic Glassmorphism Footer Watermark Badge (Slightly lower & refined proportion)
-            ctx.save();
-            const wmW = 340;
-            const wmH = 66;
+            // Glassmorphism Watermark Box ('made with ❤️ ardhrm' + Timestamp)
+            const now = new Date();
+            const pad2 = (n) => n.toString().padStart(2, '0');
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const timeStr = `${pad2(now.getDate())} ${months[now.getMonth()]} ${now.getFullYear()}, ${pad2(now.getHours())}:${pad2(now.getMinutes())} WIB`;
+
+            const wmW = 640;
+            const wmH = 88;
             const wmX = (W - wmW) / 2;
-            const wmY = H - 102;
+            const wmY = cardY + cardH - wmH - 46;
 
-            ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.72)' : 'rgba(255, 255, 255, 0.78)';
-            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.95)';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.roundRect(wmX, wmY, wmW, wmH, 20);
+            drawRoundedRect(ctx, wmX, wmY, wmW, wmH, 28);
+            ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(241, 245, 249, 0.90)';
             ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(203, 213, 225, 0.85)';
             ctx.stroke();
 
-            // Line 1: "made with ❤️ ardhrm" with crisp red heart
-            ctx.font = '600 14px Inter, sans-serif';
-            const partLeft = 'made with ';
-            const partRight = ' ardhrm';
-            const heartSize = 14;
-            const totalLineW = ctx.measureText(partLeft).width + heartSize + ctx.measureText(partRight).width;
-            let cursorX = (W - totalLineW) / 2;
-            const line1Y = wmY + 24;
+            ctx.fillStyle = isDark ? '#e2e8f0' : '#1e293b';
+            ctx.font = '700 23px "Plus Jakarta Sans", -apple-system, sans-serif';
+            ctx.fillText('made with ❤️ ardhrm', W / 2, wmY + 37);
 
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = isDark ? '#cbd5e1' : '#334155';
-            ctx.fillText(partLeft, cursorX, line1Y);
-            cursorX += ctx.measureText(partLeft).width;
-
-            // Draw crisp red vector heart
-            ctx.save();
-            ctx.fillStyle = '#ef4444';
-            const hx = cursorX + heartSize / 2;
-            const hy = line1Y - 1;
-            ctx.beginPath();
-            ctx.moveTo(hx, hy + 5);
-            ctx.bezierCurveTo(hx, hy + 4, hx - 7, hy - 1, hx - 7, hy - 4.5);
-            ctx.bezierCurveTo(hx - 7, hy - 7.5, hx - 3.5, hy - 8.5, hx, hy - 5.2);
-            ctx.bezierCurveTo(hx + 3.5, hy - 8.5, hx + 7, hy - 7.5, hx + 7, hy - 4.5);
-            ctx.bezierCurveTo(hx + 7, hy - 1, hx, hy + 4, hx, hy + 5);
-            ctx.closePath();
-            ctx.fill();
-            ctx.restore();
-
-            cursorX += heartSize;
-            ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
-            ctx.font = '700 14px Inter, sans-serif';
-            ctx.fillText(partRight, cursorX, line1Y);
-
-            // Line 2: Creation Timestamp directly underneath
-            ctx.textAlign = 'center';
             ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
-            ctx.font = '500 12px Inter, sans-serif';
-            ctx.fillText(timestampLine, W / 2, wmY + 46);
-            ctx.restore();
+            ctx.font = '600 19px "Plus Jakarta Sans", -apple-system, sans-serif';
+            ctx.fillText(`Dibuat: ${timeStr}`, W / 2, wmY + 68);
 
-            // Trigger Download
-            const fileName = `QRIS_Dinamis_Rp${currentRawValue}_${fileStamp}.png`;
-            canvas.toBlob((blob) => {
-                if (!blob) return;
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
-                showToast('QRIS berhasil disimpan!');
-            }, 'image/png');
+            // Cross-browser PNG Download (toBlob + DataURL fallback)
+            const fileName = `QRIS_${currentRawValue || '0'}_${Date.now()}.png`;
+            if (poster.toBlob) {
+                poster.toBlob((blob) => {
+                    if (!blob) return;
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1500);
+                    showToast('Gambar QRIS berhasil disimpan!');
+                }, 'image/png');
+            } else {
+                const a = document.createElement('a');
+                a.href = poster.toDataURL('image/png');
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                showToast('Gambar QRIS berhasil disimpan!');
+            }
         } catch (err) {
             showToast('Gagal menyimpan gambar QRIS.');
         }
     });
-
-    // =========================================================================
-    // 11. PHYSICAL KEYBOARD SUPPORT (DESKTOP CONVENIENCE)
-    // =========================================================================
-    document.addEventListener('keydown', (e) => {
-        if (!resultView.classList.contains('view-hidden')) return;
-        if (activeTab === 'qris') {
-            if (e.key >= '0' && e.key <= '9') {
-                const btn = document.querySelector(`.numpad-btn[data-key="${e.key}"]`);
-                if (btn) btn.click();
-            } else if (e.key === 'Backspace') {
-                const delBtn = document.querySelector('.numpad-btn[data-key="del"]');
-                if (delBtn) delBtn.click();
-            } else if (e.key === 'Enter') {
-                generateBtn.click();
-            }
-        }
-    });
+})();
 </script>
 </body>
 </html>
