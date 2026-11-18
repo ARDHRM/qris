@@ -1,557 +1,1176 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>QRIS Dinamis - Premium</title>
+    <title>QRIS Dinamis Generator - ARIF DHARMA , DIGITAL & KREATIF</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
-        }
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
     </script>
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- QRCode.js -->
+    <!-- QRCode.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
+        * {
+            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
         }
-        
-        /* Glassmorphism Light & Dark (Aesthetic Obsidian) */
-        .glass-panel-light {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100dvh;
+            overflow-x: hidden;
         }
-        .dark .glass-panel-light {
-            background: rgba(15, 23, 42, 0.72);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+
+        /* Glassmorphism Card Surface */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 24px 60px -15px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(226, 232, 240, 0.65);
+        }
+
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.82);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+            box-shadow: 0 28px 70px -15px rgba(0, 0, 0, 0.68), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
         }
 
-        /* Animations */
-        .scale-in {
-            animation: scaleIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.9) translateY(16px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.35s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Compact iOS Light/Dark Mode Toggle Switch */
+        .ios-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
         }
 
-        /* iOS Toggle Switch */
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: #6366f1;
+        .ios-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
         }
-        .toggle-checkbox:checked + .toggle-label {
+
+        .ios-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #cbd5e1;
+            border-radius: 9999px;
+            transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark .ios-slider {
+            background-color: #1e293b;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+        }
+
+        .ios-slider::before {
+            content: "";
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            top: 3px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.24);
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .ios-switch input:checked + .ios-slider {
             background: linear-gradient(135deg, #4f46e5, #7c3aed);
         }
 
-        /* Checkmark Animation */
-        .checkmark-wrapper {
-            width: 80px;
-            height: 80px;
+        .ios-switch input:checked + .ios-slider::before {
+            transform: translateX(20px);
+        }
+
+        /* Segmented Tab Switch with Sliding Pill */
+        .segmented-track {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 4px;
+            border-radius: 16px;
+        }
+
+        .segmented-pill {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            border-radius: 12px;
+            transition: transform 0.34s cubic-bezier(0.34, 1.25, 0.64, 1), background-color 0.25s ease, box-shadow 0.25s ease;
+            pointer-events: none;
+        }
+
+        .segmented-track[data-active="calc"] .segmented-pill {
+            transform: translateX(100%);
+        }
+
+        /* Smooth View Transitions */
+        .view-panel {
+            transition: opacity 0.26s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .view-hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(8px) scale(0.985);
+        }
+
+        .view-visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Strict Single QR Code Rendering (Prevent Double / Overflow) */
+        .qr-frame {
+            width: 232px;
+            height: 232px;
+            padding: 16px;
+            background: #ffffff;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        #qrcode {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #qrcode canvas {
+            display: none !important;
+        }
+
+        #qrcode img {
+            width: 200px !important;
+            height: 200px !important;
+            max-width: 200px !important;
+            max-height: 200px !important;
+            object-fit: contain;
+            display: block !important;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* Interactive Elements Guarantee */
+        button, label.ios-switch {
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        button svg, button span, label.ios-switch span {
+            pointer-events: none;
+        }
+
+        /* Animated Checkmark for Payment Success */
+        .checkmark-svg {
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
             display: block;
-            stroke-width: 2;
-            stroke: #4ade80;
+            stroke-width: 3;
+            stroke: #10b981;
             stroke-miterlimit: 10;
-            box-shadow: inset 0px 0px 0px #4ade80;
-            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+            box-shadow: inset 0px 0px 0px #10b981;
+            animation: fillCircle 0.4s ease-in-out 0.35s forwards, scaleBounce 0.3s ease-in-out 0.75s both;
         }
-        .checkmark__circle {
+
+        .checkmark-circle {
             stroke-dasharray: 166;
             stroke-dashoffset: 166;
-            stroke-width: 2;
+            stroke-width: 3;
             stroke-miterlimit: 10;
-            stroke: #4ade80;
+            stroke: #10b981;
             fill: none;
-            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+            animation: strokeAnim 0.55s cubic-bezier(0.65, 0, 0.45, 1) forwards;
         }
-        .checkmark__check {
+
+        .checkmark-check {
             transform-origin: 50% 50%;
             stroke-dasharray: 48;
             stroke-dashoffset: 48;
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+            stroke: #ffffff;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: strokeAnim 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
         }
-        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
-        @keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
-        @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 30px rgba(74, 222, 128, 0.1); } }
+
+        @keyframes strokeAnim {
+            100% { stroke-dashoffset: 0; }
+        }
+
+        @keyframes scaleBounce {
+            0%, 100% { transform: none; }
+            50% { transform: scale3d(1.1, 1.1, 1); }
+        }
+
+        @keyframes fillCircle {
+            100% { box-shadow: inset 0px 0px 0px 40px #10b981; }
+        }
     </style>
 </head>
-<body id="bodyRoot" class="min-h-screen bg-[#f4f6fb] dark:bg-[#070b14] flex items-center justify-center p-4 transition-colors duration-300 relative overflow-x-hidden select-none">
+<body class="bg-slate-100 dark:bg-[#060a14] text-slate-800 dark:text-slate-100 transition-colors duration-300 flex items-center justify-center p-4 sm:p-6 relative">
 
-    <!-- Ambient Glow Background -->
-    <div class="fixed top-[-10%] left-[-10%] w-80 h-80 bg-blue-400 dark:bg-indigo-600/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] opacity-30 dark:opacity-40 pointer-events-none"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-80 h-80 bg-purple-400 dark:bg-blue-600/25 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] opacity-30 dark:opacity-40 pointer-events-none"></div>
+    <!-- Subtle Ambient Background Orbs -->
+    <div class="fixed top-[-12%] left-[-10%] w-80 h-80 bg-blue-400/25 dark:bg-indigo-600/25 rounded-full filter blur-[110px] pointer-events-none"></div>
+    <div class="fixed bottom-[-12%] right-[-10%] w-80 h-80 bg-indigo-400/25 dark:bg-blue-600/20 rounded-full filter blur-[110px] pointer-events-none"></div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden items-center gap-2.5 bg-slate-900/95 dark:bg-slate-800/95 text-white px-4 py-3 rounded-2xl shadow-xl border border-white/10 backdrop-blur-md text-sm font-medium transition-all duration-300 opacity-0 translate-y-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    <!-- Floating Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden items-center gap-2.5 bg-slate-900/95 dark:bg-slate-800/95 text-white px-4 py-3 rounded-2xl shadow-xl border border-white/10 backdrop-blur-md text-xs sm:text-sm font-medium transition-all duration-300 opacity-0 translate-y-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M5 13l4 4L19 7" />
         </svg>
         <span id="toastText">QRIS berhasil disimpan!</span>
     </div>
 
-    <!-- Theme Switcher (Top Right) -->
-    <div class="fixed top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2 bg-white/70 dark:bg-slate-900/70 px-3 py-1.5 rounded-full backdrop-blur-md border border-slate-200/80 dark:border-white/10 shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <div class="relative inline-block w-11 align-middle select-none transition duration-200 ease-in">
-            <input type="checkbox" name="toggle" id="themeToggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-2 appearance-none cursor-pointer border-slate-300 dark:border-indigo-400 transition-all duration-300 left-0.5 top-0.5 checked:right-0.5 checked:left-auto shadow-sm"/>
-            <label for="themeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-200 dark:bg-slate-800 cursor-pointer transition-colors duration-300"></label>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-    </div>
+    <!-- Main Container -->
+    <div class="w-full max-w-[420px] flex flex-col gap-3 relative z-10 my-auto">
 
-    <main id="mainPanel" class="glass-panel-light w-full max-w-md p-6 sm:p-7 rounded-[2rem] relative z-10 fade-in transition-all duration-300 mt-8 sm:mt-0">
-        
-        <!-- Header -->
-        <div class="text-center mb-5">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 dark:bg-indigo-500/15 border border-blue-500/20 dark:border-indigo-400/20 text-blue-600 dark:text-indigo-300 text-[11px] font-semibold tracking-wider uppercase mb-2">
-                QRIS Dinamis
-            </div>
-            <h1 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
-                ARIF DHARMA , DIGITAL & KREATIF
-            </h1>
-            <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-medium">NMID: ID1025428566216</p>
-        </div>
-
-        <!-- Input Section -->
-        <div id="inputSection" class="flex flex-col gap-5">
-            
-            <!-- Error Alert -->
-            <div id="errorMessage" class="hidden bg-red-500/10 dark:bg-red-500/15 border border-red-500/30 text-red-600 dark:text-red-300 px-4 py-3 rounded-2xl text-xs font-medium backdrop-blur-sm">
-                <span id="errorText"></span>
+        <!-- Non-Intrusive Top Bar -->
+        <header class="w-full flex items-center justify-between px-1.5">
+            <div class="inline-flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span>
+                <span class="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-500 dark:text-slate-400">
+                    EMVCO DYNAMIC QRIS
+                </span>
             </div>
 
-            <!-- Nominal Display Box (Separated clearly) -->
-            <div class="p-4 rounded-2xl bg-slate-100/90 dark:bg-[#0b1120]/90 border border-slate-200/90 dark:border-indigo-500/25 shadow-inner flex flex-col gap-1 transition-colors">
-                <div class="flex items-center justify-between">
-                    <label class="text-xs font-medium text-slate-500 dark:text-slate-400">Nominal Pembayaran</label>
-                    <button type="button" id="clearBtn" class="text-xs font-medium text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 transition-colors px-1.5 py-0.5 rounded-md">
-                        Hapus Semua
+            <!-- Compact iOS Theme Toggle Switch -->
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/85 dark:bg-slate-900/85 border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <label class="ios-switch" aria-label="Ganti Tema Terang atau Gelap">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="ios-slider"></span>
+                </label>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </div>
+        </header>
+
+        <!-- Primary Glass Card -->
+        <main class="glass-card w-full p-5 sm:p-6 rounded-[2rem] relative overflow-hidden transition-all duration-300">
+
+            <!-- Merchant Header -->
+            <div class="text-center mb-5">
+                <div class="inline-flex items-center justify-center px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-indigo-500/15 border border-blue-500/20 dark:border-indigo-400/25 text-blue-600 dark:text-indigo-300 text-[10.5px] font-bold tracking-[0.08em] uppercase mb-2.5">
+                    QRIS DINAMIS GENERATOR
+                </div>
+                <h1 class="text-base sm:text-[18px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
+                    ARIF DHARMA , DIGITAL &amp; KREATIF
+                </h1>
+                <p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">
+                    NMID: ID1025428566216 &bull; A01
+                </p>
+            </div>
+
+            <!-- Segmented Tab Switch (Hidden on QR Result View) -->
+            <div id="tabSwitchWrapper" class="mb-4">
+                <div id="segmentedTrack" data-active="qris" class="segmented-track bg-slate-200/80 dark:bg-slate-950/75 border border-slate-200/90 dark:border-white/[0.07]">
+                    <div class="segmented-pill bg-white dark:bg-slate-800 shadow-sm border border-slate-200/60 dark:border-white/10"></div>
+                    <button type="button" id="tabQrisBtn" class="relative z-10 py-2 text-xs font-bold text-slate-900 dark:text-white transition-colors">
+                        Input QRIS
+                    </button>
+                    <button type="button" id="tabCalcBtn" class="relative z-10 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 transition-colors">
+                        Kalkulator
                     </button>
                 </div>
-                <div class="text-right pt-1">
-                    <span id="nominalDisplay" class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Rp 0</span>
-                </div>
             </div>
 
-            <!-- Separator -->
-            <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-white/10 to-transparent"></div>
-
-            <!-- iOS Numeric Keypad (0 on left, 000 in middle) -->
-            <div class="grid grid-cols-3 gap-2.5">
-                <button type="button" data-key="1" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">1</button>
-                <button type="button" data-key="2" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">2</button>
-                <button type="button" data-key="3" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">3</button>
-                
-                <button type="button" data-key="4" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">4</button>
-                <button type="button" data-key="5" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">5</button>
-                <button type="button" data-key="6" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">6</button>
-                
-                <button type="button" data-key="7" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">7</button>
-                <button type="button" data-key="8" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">8</button>
-                <button type="button" data-key="9" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">9</button>
-                
-                <!-- Row 4: 0 on left, 000 in middle, Delete on right -->
-                <button type="button" data-key="0" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-xl">0</button>
-                <button type="button" data-key="000" class="numpad-btn bg-white hover:bg-slate-50 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-slate-200/70 dark:border-white/[0.06] text-slate-800 dark:text-slate-100 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 text-lg">000</button>
-                <button type="button" data-key="del" aria-label="Hapus digit" class="numpad-btn bg-red-500/10 hover:bg-red-500/20 dark:bg-rose-500/15 dark:hover:bg-rose-500/25 border border-red-500/15 dark:border-rose-500/20 text-red-600 dark:text-rose-400 font-semibold py-3.5 rounded-2xl shadow-sm transition-all active:scale-95 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Primary Action Button -->
-            <button type="button" id="generateBtn" 
-                class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 dark:from-indigo-600 dark:to-blue-600 dark:hover:from-indigo-500 dark:hover:to-blue-500 text-white font-semibold py-4 rounded-2xl shadow-lg shadow-blue-600/25 dark:shadow-indigo-600/30 transition-all transform active:scale-[0.98] text-base">
-                Buat QRIS Dinamis
-            </button>
-        </div>
-
-        <!-- Result Section (Hidden by default) -->
-        <div id="resultSection" class="hidden flex-col items-center">
-            
-            <!-- Top Bar inside Result: Nominal + Download Button -->
-            <div class="w-full flex items-center justify-between bg-slate-100/80 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] px-4 py-3 rounded-2xl mb-5">
-                <div>
-                    <p class="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Total Tagihan</p>
-                    <div class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight" id="displayNominal">Rp 0</div>
+            <!-- VIEW 1: INPUT QRIS (NUMERIC KEYPAD) -->
+            <section id="inputView" class="view-panel view-visible">
+                <!-- Clean Nominal Display Box (No small red reset button) -->
+                <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-950/70 border border-slate-200/90 dark:border-white/[0.08] mb-4 text-center shadow-inner">
+                    <span class="block text-[10.5px] font-bold tracking-[0.1em] uppercase text-blue-600 dark:text-indigo-400 mb-1">
+                        NOMINAL PEMBAYARAN
+                    </span>
+                    <div id="nominalDisplay" class="text-3xl sm:text-[34px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight truncate">
+                        Rp 0
+                    </div>
                 </div>
-                <button type="button" id="saveBtn" class="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 dark:border dark:border-indigo-400/30 text-white dark:text-indigo-200 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95 shadow-sm">
+
+                <!-- Error Message Banner -->
+                <div id="errorBanner" class="hidden mb-3 px-3.5 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-600 dark:text-rose-400 text-xs font-medium text-center">
+                    Masukkan nominal lebih dari Rp 0 terlebih dahulu.
+                </div>
+
+                <!-- iOS-Style Numeric Keypad (1-9, 0 bottom-left, 000 bottom-center, backspace bottom-right) -->
+                <div class="grid grid-cols-3 gap-2.5 mb-4">
+                    <button type="button" data-key="1" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">1</button>
+                    <button type="button" data-key="2" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">2</button>
+                    <button type="button" data-key="3" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">3</button>
+
+                    <button type="button" data-key="4" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">4</button>
+                    <button type="button" data-key="5" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">5</button>
+                    <button type="button" data-key="6" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">6</button>
+
+                    <button type="button" data-key="7" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">7</button>
+                    <button type="button" data-key="8" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">8</button>
+                    <button type="button" data-key="9" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">9</button>
+
+                    <button type="button" data-key="0" class="numpad-btn min-h-[52px] rounded-2xl text-xl font-semibold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">0</button>
+                    <button type="button" data-key="000" class="numpad-btn min-h-[52px] rounded-2xl text-base font-bold bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">000</button>
+                    <button type="button" data-key="del" aria-label="Hapus Digit" class="numpad-btn min-h-[52px] rounded-2xl bg-slate-200/75 hover:bg-slate-300/75 dark:bg-white/[0.08] dark:hover:bg-white/[0.14] text-slate-700 dark:text-slate-200 border border-slate-300/60 dark:border-white/[0.07] flex items-center justify-center transition-all active:scale-95">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Primary Action: Buat QRIS -->
+                <button type="button" id="generateBtn"
+                    class="w-full min-h-[50px] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 dark:from-indigo-600 dark:to-blue-600 dark:hover:from-indigo-500 dark:hover:to-blue-500 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-blue-600/25 dark:shadow-indigo-600/30 transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                     </svg>
-                    <span>Simpan QR</span>
+                    <span>Buat QRIS</span>
                 </button>
-            </div>
-            
-            <!-- QR Card Container (Always crisp white background for reliable scanning in dark mode) -->
-            <div class="bg-white p-5 rounded-3xl shadow-xl dark:shadow-[0_15px_40px_rgba(0,0,0,0.6)] mb-6 relative scale-in border border-slate-200/90 dark:border-white/20 flex flex-col items-center">
-                <div class="text-[11px] font-bold tracking-widest text-slate-400 uppercase mb-3">SCAN QRIS</div>
-                <div id="qrcode" class="flex items-center justify-center"></div>
-                <div class="mt-3 text-[11px] font-medium text-slate-500">SATU QRIS UNTUK SEMUA</div>
+            </section>
+
+            <!-- VIEW 2: INTEGRATED CALCULATOR -->
+            <section id="calcView" class="view-panel view-hidden">
+                <!-- Calculator Display -->
+                <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-950/70 border border-slate-200/90 dark:border-white/[0.08] mb-3.5 shadow-inner flex flex-col justify-between min-h-[90px]">
+                    <div id="calcExpression" class="text-right text-xs font-medium text-slate-500 dark:text-slate-400 min-h-[18px] truncate">
+                        0
+                    </div>
+                    <div id="calcResult" class="text-right text-2xl sm:text-[28px] font-extrabold text-slate-900 dark:text-white tracking-tight truncate mt-1">
+                        Rp 0
+                    </div>
+                </div>
+
+                <!-- Ergonomic iOS Calculator Grid -->
+                <div class="grid grid-cols-4 gap-2 mb-3.5">
+                    <button type="button" data-calc="AC" class="calc-btn min-h-[44px] rounded-2xl font-bold text-xs bg-rose-500/12 hover:bg-rose-500/20 dark:bg-rose-500/15 dark:hover:bg-rose-500/25 text-rose-600 dark:text-rose-400 border border-rose-500/20 transition-all active:scale-95">AC</button>
+                    <button type="button" data-calc="DEL" aria-label="Hapus" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-sm bg-slate-200/75 hover:bg-slate-300/75 dark:bg-white/[0.08] dark:hover:bg-white/[0.14] text-slate-700 dark:text-slate-200 border border-slate-300/60 dark:border-white/[0.07] flex items-center justify-center transition-all active:scale-95">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
+                        </svg>
+                    </button>
+                    <button type="button" data-calc="%" class="calc-btn min-h-[44px] rounded-2xl font-bold text-sm bg-slate-200/75 hover:bg-slate-300/75 dark:bg-white/[0.08] dark:hover:bg-white/[0.14] text-slate-700 dark:text-slate-200 border border-slate-300/60 dark:border-white/[0.07] transition-all active:scale-95">%</button>
+                    <button type="button" data-calc="/" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-blue-600/12 hover:bg-blue-600/20 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 text-blue-600 dark:text-indigo-300 border border-blue-500/20 dark:border-indigo-400/20 transition-all active:scale-95">&divide;</button>
+
+                    <button type="button" data-calc="7" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">7</button>
+                    <button type="button" data-calc="8" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">8</button>
+                    <button type="button" data-calc="9" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">9</button>
+                    <button type="button" data-calc="*" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-blue-600/12 hover:bg-blue-600/20 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 text-blue-600 dark:text-indigo-300 border border-blue-500/20 dark:border-indigo-400/20 transition-all active:scale-95">&times;</button>
+
+                    <button type="button" data-calc="4" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">4</button>
+                    <button type="button" data-calc="5" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">5</button>
+                    <button type="button" data-calc="6" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">6</button>
+                    <button type="button" data-calc="-" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-blue-600/12 hover:bg-blue-600/20 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 text-blue-600 dark:text-indigo-300 border border-blue-500/20 dark:border-indigo-400/20 transition-all active:scale-95">&minus;</button>
+
+                    <button type="button" data-calc="1" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">1</button>
+                    <button type="button" data-calc="2" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">2</button>
+                    <button type="button" data-calc="3" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">3</button>
+                    <button type="button" data-calc="+" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-blue-600/12 hover:bg-blue-600/20 dark:bg-indigo-500/20 dark:hover:bg-indigo-500/30 text-blue-600 dark:text-indigo-300 border border-blue-500/20 dark:border-indigo-400/20 transition-all active:scale-95">+</button>
+
+                    <button type="button" data-calc="0" class="calc-btn min-h-[44px] rounded-2xl font-semibold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">0</button>
+                    <button type="button" data-calc="000" class="calc-btn min-h-[44px] rounded-2xl font-bold text-xs bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">000</button>
+                    <button type="button" data-calc="." class="calc-btn min-h-[44px] rounded-2xl font-bold text-base bg-white hover:bg-slate-50 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-white/[0.07] shadow-sm transition-all active:scale-95">.</button>
+                    <button type="button" data-calc="=" class="calc-btn min-h-[44px] rounded-2xl font-bold text-lg bg-slate-900 hover:bg-slate-800 dark:bg-indigo-500/35 dark:hover:bg-indigo-500/45 text-white border border-slate-800 dark:border-indigo-400/40 shadow-sm transition-all active:scale-95">=</button>
+                </div>
+
+                <!-- Use Result & Generate QRIS -->
+                <button type="button" id="useCalcBtn"
+                    class="w-full min-h-[48px] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 dark:from-indigo-600 dark:to-blue-600 dark:hover:from-indigo-500 dark:hover:to-blue-500 text-white font-bold py-3 rounded-2xl shadow-lg shadow-blue-600/25 dark:shadow-indigo-600/30 transition-all active:scale-[0.98] text-xs sm:text-sm flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span>Gunakan Hasil &amp; Buat QRIS</span>
+                </button>
+            </section>
+
+            <!-- VIEW 3: QRIS RESULT VIEW -->
+            <section id="resultView" class="view-panel view-hidden">
+                <!-- Total Tagihan Badge -->
+                <div class="p-3.5 rounded-2xl bg-blue-500/10 dark:bg-indigo-500/15 border border-blue-500/20 dark:border-indigo-400/25 text-center mb-4">
+                    <span class="block text-[10.5px] font-bold tracking-[0.1em] uppercase text-blue-600 dark:text-indigo-300 mb-0.5">
+                        TOTAL TAGIHAN QRIS
+                    </span>
+                    <div id="resultAmountDisplay" class="text-2xl sm:text-[28px] font-extrabold text-slate-900 dark:text-white tracking-tight">
+                        Rp 0
+                    </div>
+                </div>
+
+                <!-- Clean White QR Code Frame -->
+                <div class="p-4 rounded-3xl bg-slate-50/85 dark:bg-slate-950/65 border border-slate-200/80 dark:border-white/[0.08] mb-5 flex flex-col items-center">
+                    <div class="qr-frame shadow-md border border-slate-200/80">
+                        <div id="qrcode"></div>
+                    </div>
+                    <p class="text-[11px] font-bold tracking-[0.12em] uppercase text-slate-400 dark:text-slate-500 mt-3.5">
+                        SCAN QRIS UNTUK MEMBAYAR
+                    </p>
+                </div>
+
+                <!-- Action Buttons: Simpan QR & Sudah Dibayar -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" id="saveQrBtn"
+                        class="min-h-[48px] px-4 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-white hover:bg-slate-50 dark:bg-white/[0.07] dark:hover:bg-white/[0.12] text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-white/15 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span>Simpan QR</span>
+                    </button>
+
+                    <button type="button" id="paidBtn"
+                        class="min-h-[48px] px-4 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/25 transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Sudah Dibayar</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Payment Success Overlay -->
+            <div id="successOverlay" class="absolute inset-0 z-30 glass-card rounded-[2rem] hidden pointer-events-none flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+                <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+                <p class="text-slate-900 dark:text-white mt-5 text-lg font-extrabold tracking-tight">Pembayaran Diterima</p>
+                <p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">Mengatur ulang transaksi...</p>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex gap-3 w-full fade-in">
-                <button type="button" id="resetBtn" class="flex-1 py-3.5 rounded-2xl font-medium border border-slate-300 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors text-slate-600 dark:text-slate-300 text-sm">
-                    Transaksi Baru
-                </button>
-                <button type="button" id="paidBtn" class="flex-1 py-3.5 rounded-2xl font-semibold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-lg shadow-emerald-500/25 transition-all transform active:scale-95 text-sm">
-                    Sudah Dibayar
-                </button>
-            </div>
-        </div>
-
-        <!-- Success Overlay -->
-        <div id="successOverlay" class="absolute inset-0 z-50 glass-panel-light rounded-[2rem] hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
-            <svg class="checkmark-wrapper" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
-            <p class="text-slate-800 dark:text-white mt-6 text-xl font-semibold tracking-wide fade-in" style="animation-delay: 0.4s;">Transaksi Berhasil</p>
-            <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Pembayaran telah diterima</p>
-        </div>
-
-    </main>
+        </main>
+    </div>
 
 <script>
-    // ==========================================
-    // STRING QRIS STATIS ANDA DI SINI
-    // ==========================================
+    // =========================================================================
+    // 1. STATIC QRIS MERCHANT STRING (EXACT BYTE-FOR-BYTE)
+    // =========================================================================
     const STATIC_QRIS = '00020101021126610014COM.GO-JEK.WWW01189360091438351492230210G8351492230303UMI51440014ID.CO.QRIS.WWW0215ID10254285662160303UMI5204899953033605802ID5925ARIF DHARMA , Digital & K6008PONOROGO61056341862070703A016304333A';
 
-    // State Nominal
-    let currentRawValue = "";
-    let toastTimeout = null;
-
-    // Referensi DOM
-    const bodyRoot = document.getElementById('bodyRoot');
+    // =========================================================================
+    // 2. DOM REFERENCES & STATE
+    // =========================================================================
+    const htmlRoot = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
-    const inputSection = document.getElementById('inputSection');
-    const resultSection = document.getElementById('resultSection');
-    const nominalDisplay = document.getElementById('nominalDisplay');
-    const generateBtn = document.getElementById('generateBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const paidBtn = document.getElementById('paidBtn');
-    const saveBtn = document.getElementById('saveBtn');
-    const qrcodeDiv = document.getElementById('qrcode');
-    const displayNominal = document.getElementById('displayNominal');
-    const errorMessage = document.getElementById('errorMessage');
-    const errorText = document.getElementById('errorText');
-    const successOverlay = document.getElementById('successOverlay');
-    const numpadBtns = document.querySelectorAll('.numpad-btn');
     const toast = document.getElementById('toast');
     const toastText = document.getElementById('toastText');
 
-    let qrcode = null;
+    const tabSwitchWrapper = document.getElementById('tabSwitchWrapper');
+    const segmentedTrack = document.getElementById('segmentedTrack');
+    const tabQrisBtn = document.getElementById('tabQrisBtn');
+    const tabCalcBtn = document.getElementById('tabCalcBtn');
 
-    // Toast Helper
+    const inputView = document.getElementById('inputView');
+    const calcView = document.getElementById('calcView');
+    const resultView = document.getElementById('resultView');
+
+    const nominalDisplay = document.getElementById('nominalDisplay');
+    const errorBanner = document.getElementById('errorBanner');
+    const numpadButtons = document.querySelectorAll('.numpad-btn');
+    const generateBtn = document.getElementById('generateBtn');
+
+    const calcExpressionEl = document.getElementById('calcExpression');
+    const calcResultEl = document.getElementById('calcResult');
+    const calcButtons = document.querySelectorAll('.calc-btn');
+    const useCalcBtn = document.getElementById('useCalcBtn');
+
+    const resultAmountDisplay = document.getElementById('resultAmountDisplay');
+    const qrcodeContainer = document.getElementById('qrcode');
+    const saveQrBtn = document.getElementById('saveQrBtn');
+    const paidBtn = document.getElementById('paidBtn');
+    const successOverlay = document.getElementById('successOverlay');
+
+    let currentRawValue = '';
+    let activeTab = 'qris';
+    let toastTimer = null;
+
+    // =========================================================================
+    // 3. LIGHT / DARK MODE THEME SWITCHER (DEFAULT: LIGHT MODE)
+    // =========================================================================
+    function applyTheme(isDark) {
+        if (isDark) {
+            htmlRoot.classList.remove('light');
+            htmlRoot.classList.add('dark');
+            themeToggle.checked = true;
+        } else {
+            htmlRoot.classList.remove('dark');
+            htmlRoot.classList.add('light');
+            themeToggle.checked = false;
+        }
+    }
+
+    // Default to Light Mode
+    applyTheme(false);
+
+    themeToggle.addEventListener('change', (e) => {
+        applyTheme(e.target.checked);
+    });
+
+    // =========================================================================
+    // 4. TOAST NOTIFICATION & FORMATTING HELPERS
+    // =========================================================================
     function showToast(message) {
-        toastText.innerText = message;
+        toastText.textContent = message;
         toast.classList.remove('hidden');
         toast.classList.add('flex');
         void toast.offsetWidth;
-        toast.classList.remove('opacity-0', 'translate-y-4');
-        
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => {
-            toast.classList.add('opacity-0', 'translate-y-4');
+        toast.classList.remove('opacity-0', 'translate-y-3');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', 'translate-y-3');
             setTimeout(() => {
                 toast.classList.add('hidden');
                 toast.classList.remove('flex');
             }, 300);
-        }, 2800);
+        }, 2600);
     }
 
-    // Default Light Mode Setup
-    if (localStorage.getItem('theme') === 'dark') {
-        bodyRoot.classList.add('dark');
-        themeToggle.checked = true;
-    } else {
-        bodyRoot.classList.remove('dark');
-        themeToggle.checked = false;
+    function formatRupiah(rawDigits) {
+        if (!rawDigits || rawDigits === '0') return 'Rp 0';
+        const clean = rawDigits.replace(/^0+/, '') || '0';
+        return 'Rp ' + clean.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
-    // Toggle Theme Event
-    themeToggle.addEventListener('change', () => {
-        if (themeToggle.checked) {
-            bodyRoot.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
+    function updateNominalDisplay() {
+        nominalDisplay.textContent = formatRupiah(currentRawValue);
+        errorBanner.classList.add('hidden');
+    }
+
+    // =========================================================================
+    // 5. SEGMENTED TAB SWITCH & VIEW TRANSITIONS
+    // =========================================================================
+    function showView(targetView) {
+        [inputView, calcView, resultView].forEach((view) => {
+            if (view === targetView) {
+                view.classList.remove('view-hidden');
+                view.classList.add('view-visible');
+            } else {
+                view.classList.remove('view-visible');
+                view.classList.add('view-hidden');
+            }
+        });
+    }
+
+    function switchTab(tabName) {
+        activeTab = tabName;
+        segmentedTrack.setAttribute('data-active', tabName);
+
+        if (tabName === 'qris') {
+            tabQrisBtn.classList.remove('text-slate-500', 'dark:text-slate-400', 'font-semibold');
+            tabQrisBtn.classList.add('text-slate-900', 'dark:text-white', 'font-bold');
+            tabCalcBtn.classList.remove('text-slate-900', 'dark:text-white', 'font-bold');
+            tabCalcBtn.classList.add('text-slate-500', 'dark:text-slate-400', 'font-semibold');
+            showView(inputView);
         } else {
-            bodyRoot.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-        }
-    });
+            tabCalcBtn.classList.remove('text-slate-500', 'dark:text-slate-400', 'font-semibold');
+            tabCalcBtn.classList.add('text-slate-900', 'dark:text-white', 'font-bold');
+            tabQrisBtn.classList.remove('text-slate-900', 'dark:text-white', 'font-bold');
+            tabQrisBtn.classList.add('text-slate-500', 'dark:text-slate-400', 'font-semibold');
 
-    // Fungsi Format Rupiah
-    function formatRupiah(angka) {
-        if (!angka || angka === "") return "Rp 0";
-        let numberString = angka.replace(/[^,\d]/g, "").toString();
-        let split = numberString.split(",");
-        let sisa = split[0].length % 3;
-        let rupiah = split[0].substr(0, sisa);
-        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        if (ribuan) {
-            let separator = sisa ? "." : "";
-            rupiah += separator + ribuan.join(".");
+            if (currentRawValue && parseInt(currentRawValue, 10) > 0 && calcTokens.length === 0 && calcCurrent === '0') {
+                calcCurrent = parseInt(currentRawValue, 10).toString();
+                renderCalculator();
+            }
+            showView(calcView);
         }
-        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
-        return "Rp " + rupiah;
     }
 
-    // Keypad Logic
-    numpadBtns.forEach(btn => {
+    tabQrisBtn.addEventListener('click', () => switchTab('qris'));
+    tabCalcBtn.addEventListener('click', () => switchTab('calc'));
+
+    // =========================================================================
+    // 6. NUMERIC KEYPAD LOGIC
+    // =========================================================================
+    numpadButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
-            hideError();
             const key = btn.getAttribute('data-key');
-            
+            if (!key) return;
+
             if (key === 'del') {
                 currentRawValue = currentRawValue.slice(0, -1);
-            } else {
-                if (currentRawValue === "" && (key === "0" || key === "000")) {
-                    return;
+            } else if (key === '0' || key === '000') {
+                if (currentRawValue.length === 0) return;
+                if (currentRawValue.length + key.length <= 10) {
+                    currentRawValue += key;
                 }
+            } else {
                 if (currentRawValue.length < 10) {
                     currentRawValue += key;
                 }
             }
 
-            nominalDisplay.innerText = formatRupiah(currentRawValue);
+            currentRawValue = currentRawValue.replace(/^0+/, '');
+            updateNominalDisplay();
         });
     });
 
-    // Clear Button
-    clearBtn.addEventListener('click', () => {
-        currentRawValue = "";
-        nominalDisplay.innerText = "Rp 0";
-        hideError();
-    });
+    // =========================================================================
+    // 7. INTEGRATED CALCULATOR LOGIC
+    // =========================================================================
+    let calcTokens = [];
+    let calcCurrent = '0';
+    let calcEvaluated = false;
 
-    // Fungsi Kalkulasi CRC16-CCITT (0xFFFF, polinomial 0x1021)
-    function crc16(str) {
-        let crc = 0xFFFF;
-        for (let c = 0; c < str.length; c++) {
-            crc ^= str.charCodeAt(c) << 8;
-            for (let i = 0; i < 8; i++) {
-                if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
-                else crc = crc << 1;
+    function formatNumberID(numVal) {
+        if (!isFinite(numVal) || isNaN(numVal)) return 'Error';
+        const rounded = Math.round(numVal * 100) / 100;
+        const parts = rounded.toString().split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return parts.length > 1 ? `${parts[0]},${parts[1]}` : parts[0];
+    }
+
+    function evaluateTokens(tokens) {
+        if (!tokens || tokens.length === 0) return 0;
+        let list = [...tokens];
+        if (['+', '-', '*', '/'].includes(list[list.length - 1])) {
+            list.pop();
+        }
+        if (list.length === 0) return 0;
+
+        // Pass 1: Multiplication & Division
+        let pass1 = [parseFloat(list[0]) || 0];
+        for (let i = 1; i < list.length; i += 2) {
+            const op = list[i];
+            const nextVal = parseFloat(list[i + 1]) || 0;
+            if (op === '*') {
+                pass1[pass1.length - 1] *= nextVal;
+            } else if (op === '/') {
+                if (nextVal === 0) return NaN;
+                pass1[pass1.length - 1] /= nextVal;
+            } else {
+                pass1.push(op, nextVal);
             }
         }
-        return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+
+        // Pass 2: Addition & Subtraction
+        let total = pass1[0];
+        for (let i = 1; i < pass1.length; i += 2) {
+            const op = pass1[i];
+            const nextVal = pass1[i + 1];
+            if (op === '+') total += nextVal;
+            if (op === '-') total -= nextVal;
+        }
+        return total;
     }
 
-    // Fungsi Error UI
-    function showError(msg) {
-        errorText.innerText = msg;
-        errorMessage.classList.remove('hidden');
-        errorMessage.classList.add('fade-in');
+    function getCalcLiveValue() {
+        return evaluateTokens([...calcTokens, calcCurrent]);
     }
 
-    function hideError() {
-        errorMessage.classList.add('hidden');
+    function renderCalculator() {
+        const opMap = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+        const formattedHistory = calcTokens.map(t => opMap[t] || formatNumberID(parseFloat(t)));
+        const currentText = calcCurrent.endsWith('.')
+            ? formatNumberID(parseFloat(calcCurrent)) + ','
+            : formatNumberID(parseFloat(calcCurrent));
+
+        calcExpressionEl.textContent = formattedHistory.length === 0
+            ? currentText
+            : `${formattedHistory.join(' ')} ${currentText}`;
+
+        const liveVal = getCalcLiveValue();
+        if (!isFinite(liveVal) || isNaN(liveVal)) {
+            calcResultEl.textContent = 'Tidak valid';
+        } else {
+            const intVal = Math.max(0, Math.round(liveVal));
+            calcResultEl.textContent = 'Rp ' + intVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
     }
 
-    // Generate QRIS Dinamis
-    generateBtn.addEventListener('click', () => {
-        hideError();
-        const amount = parseInt(currentRawValue, 10);
+    calcButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const val = btn.getAttribute('data-calc');
+            if (!val) return;
 
-        if (!amount || isNaN(amount) || amount <= 0) {
-            showError("Silakan masukkan nominal pembayaran terlebih dahulu.");
+            if (val === 'AC') {
+                calcTokens = [];
+                calcCurrent = '0';
+                calcEvaluated = false;
+            } else if (val === 'DEL') {
+                if (calcEvaluated) {
+                    calcTokens = [];
+                    calcEvaluated = false;
+                }
+                if (calcCurrent.length > 1) {
+                    calcCurrent = calcCurrent.slice(0, -1);
+                    if (calcCurrent === '-') calcCurrent = '0';
+                } else {
+                    calcCurrent = '0';
+                }
+            } else if (val === '%') {
+                const num = parseFloat(calcCurrent) || 0;
+                if (calcTokens.length >= 2) {
+                    const base = evaluateTokens(calcTokens.slice(0, -1));
+                    calcCurrent = ((base * num) / 100).toString();
+                } else {
+                    calcCurrent = (num / 100).toString();
+                }
+            } else if (['+', '-', '*', '/'].includes(val)) {
+                if (calcEvaluated) {
+                    calcTokens = [];
+                    calcEvaluated = false;
+                }
+                calcTokens.push(calcCurrent, val);
+                calcCurrent = '0';
+            } else if (val === '=') {
+                const res = getCalcLiveValue();
+                if (isFinite(res) && !isNaN(res)) {
+                    calcTokens = [];
+                    calcCurrent = (Math.round(res * 100) / 100).toString();
+                    calcEvaluated = true;
+                }
+            } else if (val === '.') {
+                if (calcEvaluated) {
+                    calcTokens = [];
+                    calcCurrent = '0.';
+                    calcEvaluated = false;
+                } else if (!calcCurrent.includes('.')) {
+                    calcCurrent += '.';
+                }
+            } else {
+                if (calcEvaluated) {
+                    calcTokens = [];
+                    calcCurrent = val === '000' ? '0' : val;
+                    calcEvaluated = false;
+                } else if (calcCurrent === '0') {
+                    calcCurrent = val === '000' ? '0' : val;
+                } else if (calcCurrent.length + val.length <= 12) {
+                    calcCurrent += val;
+                }
+            }
+
+            renderCalculator();
+        });
+    });
+
+    useCalcBtn.addEventListener('click', () => {
+        const finalVal = getCalcLiveValue();
+        const roundedRupiah = Math.round(finalVal);
+        if (!isFinite(roundedRupiah) || isNaN(roundedRupiah) || roundedRupiah <= 0) {
+            showToast('Hasil hitungan harus lebih dari Rp 0');
+            return;
+        }
+        currentRawValue = roundedRupiah.toString().slice(0, 10);
+        updateNominalDisplay();
+        generateDynamicQrisFlow();
+    });
+
+    // =========================================================================
+    // 8. EMVCO DYNAMIC QRIS GENERATOR & CRC16-CCITT (BYTE-FOR-BYTE PRESERVATION)
+    // =========================================================================
+    function computeCRC16CCITT(str) {
+        let crc = 0xFFFF;
+        for (let i = 0; i < str.length; i++) {
+            crc ^= (str.charCodeAt(i) << 8);
+            for (let j = 0; j < 8; j++) {
+                if ((crc & 0x8000) !== 0) {
+                    crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+                } else {
+                    crc = (crc << 1) & 0xFFFF;
+                }
+            }
+        }
+        return crc.toString(16).toUpperCase().padStart(4, '0');
+    }
+
+    function convertStaticToDynamicQRIS(staticPayload, amountDigits) {
+        const cleanAmount = parseInt(amountDigits, 10).toString();
+        const tagsMap = new Map();
+        let idx = 0;
+
+        // 1. Sequential TLV parsing, stopping before tag '63' (CRC)
+        while (idx + 4 <= staticPayload.length) {
+            const tag = staticPayload.substring(idx, idx + 2);
+            if (tag === '63') break;
+
+            const lenStr = staticPayload.substring(idx + 2, idx + 4);
+            const len = parseInt(lenStr, 10);
+            if (isNaN(len) || idx + 4 + len > staticPayload.length) {
+                throw new Error('Format TLV QRIS statis tidak valid.');
+            }
+
+            const val = staticPayload.substring(idx + 4, idx + 4 + len);
+            tagsMap.set(tag, val);
+            idx += 4 + len;
+        }
+
+        // 2. Set Tag '01' (Point of Initiation Method) to '12' (Dynamic QRIS)
+        tagsMap.set('01', '12');
+
+        // 3. Insert/update Tag '54' (Transaction Amount)
+        tagsMap.set('54', cleanAmount);
+
+        // 4. Reassemble all tags in exact ascending numeric tag order, preserving byte-for-byte values
+        const sortedTags = Array.from(tagsMap.keys()).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+        let payloadWithoutCRC = '';
+
+        for (const tag of sortedTags) {
+            const val = tagsMap.get(tag);
+            const lenPadded = val.length.toString().padStart(2, '0');
+            payloadWithoutCRC += `${tag}${lenPadded}${val}`;
+        }
+
+        // 5. Append '6304' and compute exact CRC16-CCITT checksum
+        const payloadWithCrcTag = payloadWithoutCRC + '6304';
+        const crcHex = computeCRC16CCITT(payloadWithCrcTag);
+        return payloadWithCrcTag + crcHex;
+    }
+
+    function generateDynamicQrisFlow() {
+        const amountNum = parseInt(currentRawValue, 10);
+        if (!currentRawValue || isNaN(amountNum) || amountNum <= 0) {
+            errorBanner.classList.remove('hidden');
             return;
         }
 
         try {
-            // Ubah statis (010211) menjadi dinamis (010212)
-            let qris = STATIC_QRIS.replace("010211", "010212");
-            let nominalStr = amount.toString();
-            // Buat tag 54: "54" + panjang string nominal (2 digit) + nominal
-            let nominalTag = "54" + nominalStr.length.toString().padStart(2, '0') + nominalStr;
-            
-            // Buang CRC lama (4 karakter terakhir)
-            qris = qris.slice(0, -4); 
-            
-            let index6304 = qris.lastIndexOf("6304");
-            if (index6304 === -1) {
-                showError("Format QRIS tidak valid. Tag '6304' tidak ditemukan.");
-                return;
-            }
+            const dynamicQrisString = convertStaticToDynamicQRIS(STATIC_QRIS, amountNum.toString());
 
-            // Sisipkan tag nominal sebelum tag 6304
-            let newQris = qris.substring(0, index6304) + nominalTag + qris.substring(index6304);
-            // Hitung ulang CRC
-            let finalCrc = crc16(newQris);
-            let finalQris = newQris + finalCrc;
-
-            // Update UI
-            displayNominal.innerText = formatRupiah(amount.toString());
-            qrcodeDiv.innerHTML = "";
-            
-            // Render QR Code baru dengan resolusi tajam
-            qrcode = new QRCode(qrcodeDiv, {
-                text: finalQris,
-                width: 240,
-                height: 240,
-                colorDark : "#0f172a",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.M
+            // Clear previous QR and render single crisp 200x200 QR code
+            qrcodeContainer.innerHTML = '';
+            new QRCode(qrcodeContainer, {
+                text: dynamicQrisString,
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.M
             });
 
-            // Transisi UI
-            inputSection.classList.add('hidden');
-            resultSection.classList.remove('hidden');
-            resultSection.classList.add('flex');
-
-        } catch (e) {
-            showError("Terjadi kesalahan memproses QRIS.");
-            console.error(e);
+            resultAmountDisplay.textContent = formatRupiah(amountNum.toString());
+            tabSwitchWrapper.classList.add('hidden');
+            showView(resultView);
+        } catch (err) {
+            showToast('Gagal memproses kode QRIS.');
         }
-    });
-
-    // Reset (Transaksi Baru)
-    resetBtn.addEventListener('click', resetApp);
-
-    function resetApp() {
-        resultSection.classList.add('hidden');
-        resultSection.classList.remove('flex');
-        inputSection.classList.remove('hidden');
-        currentRawValue = "";
-        nominalDisplay.innerText = "Rp 0";
-        hideError();
-        successOverlay.classList.add('hidden');
-        successOverlay.classList.remove('flex');
-        successOverlay.style.opacity = '0';
     }
 
-    // Simpan QR sebagai Gambar (Pure High-Res HTML5 Canvas Renderer)
-    saveBtn.addEventListener('click', () => {
-        const qrCanvas = document.querySelector('#qrcode canvas');
-        const qrImg = document.querySelector('#qrcode img');
-        const sourceElement = qrCanvas || qrImg;
+    generateBtn.addEventListener('click', generateDynamicQrisFlow);
 
-        if (!sourceElement) {
-            showError("QR Code belum tersedia untuk disimpan.");
+    // =========================================================================
+    // 9. PAYMENT COMPLETED & AUTO-RESET
+    // =========================================================================
+    paidBtn.addEventListener('click', () => {
+        successOverlay.classList.remove('hidden', 'pointer-events-none');
+        successOverlay.classList.add('flex');
+        void successOverlay.offsetWidth;
+        successOverlay.classList.remove('opacity-0');
+        successOverlay.classList.add('opacity-100');
+
+        setTimeout(() => {
+            // Reset state back to Rp 0 and Input QRIS tab
+            currentRawValue = '';
+            updateNominalDisplay();
+            calcTokens = [];
+            calcCurrent = '0';
+            calcEvaluated = false;
+            renderCalculator();
+            qrcodeContainer.innerHTML = '';
+
+            tabSwitchWrapper.classList.remove('hidden');
+            switchTab('qris');
+
+            successOverlay.classList.remove('opacity-100');
+            successOverlay.classList.add('opacity-0');
+            setTimeout(() => {
+                successOverlay.classList.add('hidden', 'pointer-events-none');
+                successOverlay.classList.remove('flex');
+            }, 300);
+        }, 1600);
+    });
+
+    // =========================================================================
+    // 10. SAVE QR IMAGE (THEME-MATCHED + GLASSMORPHISM WATERMARK FOOTER)
+    // =========================================================================
+    saveQrBtn.addEventListener('click', () => {
+        const qrImg = qrcodeContainer.querySelector('img');
+        const qrCanvas = qrcodeContainer.querySelector('canvas');
+        const qrSource = (qrImg && qrImg.complete && qrImg.naturalWidth > 0) ? qrImg : qrCanvas;
+
+        if (!qrSource) {
+            showToast('QR Code belum siap disimpan.');
             return;
         }
 
         try {
-            // Buat canvas komposit beresolusi tinggi (600x780) agar rapi & mudah dipindai
-            const exportCanvas = document.createElement('canvas');
-            const ctx = exportCanvas.getContext('2d');
-            exportCanvas.width = 600;
-            exportCanvas.height = 780;
+            const isDark = htmlRoot.classList.contains('dark');
+            const now = new Date();
+            const pad2 = (n) => n.toString().padStart(2, '0');
+            const dateStr = `${pad2(now.getDate())}/${pad2(now.getMonth() + 1)}/${now.getFullYear()}`;
+            const timeStr = `${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())} WIB`;
+            const timestampLine = `${dateStr} • ${timeStr}`;
+            const fileStamp = `${now.getFullYear()}${pad2(now.getMonth() + 1)}${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;
 
-            // Latar putih bersih
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+            const W = 760;
+            const H = 1040;
+            const canvas = document.createElement('canvas');
+            canvas.width = W;
+            canvas.height = H;
+            const ctx = canvas.getContext('2d');
 
-            // Header aksen atas
-            ctx.fillStyle = '#1e293b';
-            ctx.font = 'bold 24px Poppins, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('ARIF DHARMA , DIGITAL & KREATIF', 300, 75);
+            // 1. Background matching active Light or Dark theme
+            const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+            if (isDark) {
+                bgGrad.addColorStop(0, '#070b14');
+                bgGrad.addColorStop(1, '#0f172a');
+            } else {
+                bgGrad.addColorStop(0, '#f1f5f9');
+                bgGrad.addColorStop(1, '#e2e8f0');
+            }
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, W, H);
 
-            // NMID
-            ctx.fillStyle = '#64748b';
-            ctx.font = '500 18px Poppins, sans-serif';
-            ctx.fillText('NMID: ID1025428566216', 300, 108);
+            // Ambient soft glow
+            ctx.save();
+            const glow1 = ctx.createRadialGradient(140, 140, 10, 140, 140, 320);
+            glow1.addColorStop(0, isDark ? 'rgba(79, 70, 229, 0.25)' : 'rgba(59, 130, 246, 0.16)');
+            glow1.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow1;
+            ctx.fillRect(0, 0, W, H);
 
-            // Nominal Tagihan
-            ctx.fillStyle = '#2563eb';
-            ctx.font = 'bold 34px Poppins, sans-serif';
-            ctx.fillText(formatRupiah(currentRawValue), 300, 165);
+            const glow2 = ctx.createRadialGradient(W - 140, H - 180, 10, W - 140, H - 180, 320);
+            glow2.addColorStop(0, isDark ? 'rgba(37, 99, 235, 0.2)' : 'rgba(99, 102, 241, 0.14)');
+            glow2.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow2;
+            ctx.fillRect(0, 0, W, H);
+            ctx.restore();
 
-            // Bingkai QR
-            ctx.strokeStyle = '#e2e8f0';
-            ctx.lineWidth = 3;
+            // 2. Main Glass Card Container
+            const cardX = 56;
+            const cardY = 48;
+            const cardW = W - 112;
+            const cardH = 824;
+
+            ctx.save();
+            ctx.shadowColor = isDark ? 'rgba(0, 0, 0, 0.55)' : 'rgba(15, 23, 42, 0.1)';
+            ctx.shadowBlur = 32;
+            ctx.shadowOffsetY = 14;
+            ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.88)' : 'rgba(255, 255, 255, 0.94)';
             ctx.beginPath();
-            ctx.roundRect(100, 200, 400, 400, 24);
+            ctx.roundRect(cardX, cardY, cardW, cardH, 36);
+            ctx.fill();
+
+            ctx.shadowColor = 'transparent';
+            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.95)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+
+            // 3. Top Pill Badge inside Card
+            ctx.save();
+            const pillW = 240;
+            const pillH = 34;
+            const pillX = (W - pillW) / 2;
+            const pillY = cardY + 38;
+            ctx.fillStyle = isDark ? 'rgba(99, 102, 241, 0.16)' : 'rgba(59, 130, 246, 0.1)';
+            ctx.strokeStyle = isDark ? 'rgba(129, 140, 248, 0.28)' : 'rgba(59, 130, 246, 0.24)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(pillX, pillY, pillW, pillH, 17);
+            ctx.fill();
             ctx.stroke();
 
-            // Gambar QR Code di tengah
+            ctx.fillStyle = isDark ? '#a5b4fc' : '#2563eb';
+            ctx.font = '700 13px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('QRIS DINAMIS GENERATOR', W / 2, pillY + pillH / 2 + 1);
+            ctx.restore();
+
+            // 4. Merchant Name & NMID
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
+            ctx.font = '800 25px Inter, sans-serif';
+            ctx.fillText('ARIF DHARMA , DIGITAL & KREATIF', W / 2, cardY + 114);
+
+            ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+            ctx.font = '600 16px Inter, sans-serif';
+            ctx.fillText('NMID: ID1025428566216 • A01', W / 2, cardY + 146);
+            ctx.restore();
+
+            // 5. Total Tagihan Box
+            ctx.save();
+            const amtBoxW = cardW - 88;
+            const amtBoxH = 98;
+            const amtBoxX = (W - amtBoxW) / 2;
+            const amtBoxY = cardY + 178;
+
+            ctx.fillStyle = isDark ? 'rgba(99, 102, 241, 0.14)' : 'rgba(59, 130, 246, 0.08)';
+            ctx.strokeStyle = isDark ? 'rgba(129, 140, 248, 0.25)' : 'rgba(59, 130, 246, 0.22)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(amtBoxX, amtBoxY, amtBoxW, amtBoxH, 22);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = isDark ? '#a5b4fc' : '#2563eb';
+            ctx.font = '700 13px Inter, sans-serif';
+            ctx.fillText('TOTAL TAGIHAN QRIS', W / 2, amtBoxY + 30);
+
+            ctx.fillStyle = isDark ? '#ffffff' : '#0f172a';
+            ctx.font = '800 38px Inter, sans-serif';
+            ctx.fillText(formatRupiah(currentRawValue), W / 2, amtBoxY + 74);
+            ctx.restore();
+
+            // 6. White QR Code Frame with Quiet Zone
+            ctx.save();
+            const qrFrameSize = 420;
+            const qrFrameX = (W - qrFrameSize) / 2;
+            const qrFrameY = cardY + 306;
+            const pad = 28;
+
+            ctx.shadowColor = isDark ? 'rgba(0, 0, 0, 0.35)' : 'rgba(15, 23, 42, 0.08)';
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetY = 8;
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.roundRect(qrFrameX, qrFrameY, qrFrameSize, qrFrameSize, 28);
+            ctx.fill();
+
+            ctx.shadowColor = 'transparent';
+            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.12)' : '#e2e8f0';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
             ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(sourceElement, 125, 225, 350, 350);
+            ctx.drawImage(qrSource, qrFrameX + pad, qrFrameY + pad, qrFrameSize - pad * 2, qrFrameSize - pad * 2);
+            ctx.restore();
 
-            // Watermark Footer QRIS
-            ctx.fillStyle = '#0f172a';
-            ctx.font = 'bold 20px Poppins, sans-serif';
-            ctx.fillText('SATU QRIS UNTUK SEMUA', 300, 665);
+            // 7. Scan Instruction Text
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.fillStyle = isDark ? '#64748b' : '#94a3b8';
+            ctx.font = '700 14px Inter, sans-serif';
+            ctx.fillText('SCAN QRIS UNTUK MEMBAYAR', W / 2, qrFrameY + qrFrameSize + 44);
+            ctx.restore();
 
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = '400 16px Poppins, sans-serif';
-            ctx.fillText('QRIS Dinamis • Siap Dipindai', 300, 698);
+            // 8. Aesthetic Glassmorphism Footer Watermark Badge (Slightly lower & refined proportion)
+            ctx.save();
+            const wmW = 340;
+            const wmH = 66;
+            const wmX = (W - wmW) / 2;
+            const wmY = H - 102;
 
-            const fileName = `QRIS-ArifDharma-${currentRawValue}.png`;
+            ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.72)' : 'rgba(255, 255, 255, 0.78)';
+            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.95)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(wmX, wmY, wmW, wmH, 20);
+            ctx.fill();
+            ctx.stroke();
 
-            // Gunakan toBlob dengan fallback toDataURL untuk kompatibilitas penuh di Android/iOS/Desktop
-            if (exportCanvas.toBlob) {
-                exportCanvas.toBlob((blob) => {
-                    if (!blob) return;
-                    const blobUrl = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = fileName;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
-                    showToast('QRIS berhasil disimpan!');
-                }, 'image/png');
-            } else {
-                const dataUrl = exportCanvas.toDataURL('image/png');
+            // Line 1: "made with ❤️ ardhrm" with crisp red heart
+            ctx.font = '600 14px Inter, sans-serif';
+            const partLeft = 'made with ';
+            const partRight = ' ardhrm';
+            const heartSize = 14;
+            const totalLineW = ctx.measureText(partLeft).width + heartSize + ctx.measureText(partRight).width;
+            let cursorX = (W - totalLineW) / 2;
+            const line1Y = wmY + 24;
+
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = isDark ? '#cbd5e1' : '#334155';
+            ctx.fillText(partLeft, cursorX, line1Y);
+            cursorX += ctx.measureText(partLeft).width;
+
+            // Draw crisp red vector heart
+            ctx.save();
+            ctx.fillStyle = '#ef4444';
+            const hx = cursorX + heartSize / 2;
+            const hy = line1Y - 1;
+            ctx.beginPath();
+            ctx.moveTo(hx, hy + 5);
+            ctx.bezierCurveTo(hx, hy + 4, hx - 7, hy - 1, hx - 7, hy - 4.5);
+            ctx.bezierCurveTo(hx - 7, hy - 7.5, hx - 3.5, hy - 8.5, hx, hy - 5.2);
+            ctx.bezierCurveTo(hx + 3.5, hy - 8.5, hx + 7, hy - 7.5, hx + 7, hy - 4.5);
+            ctx.bezierCurveTo(hx + 7, hy - 1, hx, hy + 4, hx, hy + 5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+
+            cursorX += heartSize;
+            ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
+            ctx.font = '700 14px Inter, sans-serif';
+            ctx.fillText(partRight, cursorX, line1Y);
+
+            // Line 2: Creation Timestamp directly underneath
+            ctx.textAlign = 'center';
+            ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+            ctx.font = '500 12px Inter, sans-serif';
+            ctx.fillText(timestampLine, W / 2, wmY + 46);
+            ctx.restore();
+
+            // Trigger Download
+            const fileName = `QRIS_Dinamis_Rp${currentRawValue}_${fileStamp}.png`;
+            canvas.toBlob((blob) => {
+                if (!blob) return;
+                const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
-                link.href = dataUrl;
+                link.href = url;
                 link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
                 showToast('QRIS berhasil disimpan!');
-            }
+            }, 'image/png');
         } catch (err) {
-            console.error('Gagal menyimpan gambar:', err);
-            showError('Gagal menyimpan gambar QRIS.');
+            showToast('Gagal menyimpan gambar QRIS.');
         }
     });
 
-    // Sudah Dibayar (Tampilkan Animasi Sukses)
-    paidBtn.addEventListener('click', () => {
-        successOverlay.classList.remove('hidden');
-        successOverlay.classList.add('flex');
-        void successOverlay.offsetWidth;
-        successOverlay.style.opacity = '1';
-
-        setTimeout(() => {
-            resetApp();
-        }, 2600);
+    // =========================================================================
+    // 11. PHYSICAL KEYBOARD SUPPORT (DESKTOP CONVENIENCE)
+    // =========================================================================
+    document.addEventListener('keydown', (e) => {
+        if (!resultView.classList.contains('view-hidden')) return;
+        if (activeTab === 'qris') {
+            if (e.key >= '0' && e.key <= '9') {
+                const btn = document.querySelector(`.numpad-btn[data-key="${e.key}"]`);
+                if (btn) btn.click();
+            } else if (e.key === 'Backspace') {
+                const delBtn = document.querySelector('.numpad-btn[data-key="del"]');
+                if (delBtn) delBtn.click();
+            } else if (e.key === 'Enter') {
+                generateBtn.click();
+            }
+        }
     });
-
 </script>
 </body>
 </html>
